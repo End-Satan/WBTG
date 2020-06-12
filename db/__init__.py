@@ -2,6 +2,8 @@ import os
 import yaml
 import threading
 import time
+from telegram_util import commitRepo
+import uuid
 
 def getFile(name):
 	fn = 'db/' + name
@@ -22,10 +24,6 @@ class DBItem(object):
 		with open(self.fn, 'a') as f:
 			f.write('\n' + x)
 		return True
-
-	def contains(self, x):
-		x = str(x).strip()
-		return x in self.items
 
 class Subscription(object):
 	def __init__(self):
@@ -87,13 +85,20 @@ class Subscription(object):
 	def save(self):
 		with open('db/subscription', 'w') as f:
 			f.write(yaml.dump(self.sub, sort_keys=True, indent=2, allow_unicode=True))
+		commitRepo(delay_minute=0)
+
+class Existing(object):
+	def __init__(self):
+		fn = 'existing_' + uuid.getnode()
+		self.current = DBItem(fn)
+		for fn in os.listdir('db'):self.all
 
 class DB(object):
 	def __init__(self):
 		self.reload()
 
 	def reload(self):
-		self.existing = DBItem('existing')
+		self.existing = Existing()
 		self.blacklist = DBItem('blacklist')
 		self.popularlist = DBItem('popularlist')
 		self.subscription = Subscription()
