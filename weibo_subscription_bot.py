@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from telegram_util import matchKey, clearUrl, log_on_fail, removeOldFiles, commitRepo
+from telegram_util import matchKey, clearUrl, log_on_fail, removeOldFiles, commitRepo, splitCommand
 import sys
 from telegram.ext import Updater, MessageHandler, Filters
 import yaml
@@ -132,15 +132,20 @@ def handleCommand(update, context):
 	msg = update.message
 	if not msg or not msg.text.startwith('/wb'):
 		return
-	
+	command, text = splitCommand(msg.text)
+	if 'unsubscribe' in command:
+		db.subscription.remove(msg.chat_id, text)
+	elif 'subscribe' in command:
+		db.subscription.add(msg.chat_id, text)
+	msg.reply_text()
 
 
 def handleHelp(update, context):
-	update.message.reply_message(HELP_MESSAGE)
+	update.message.reply_text(HELP_MESSAGE)
 
 def handleStart(update, context):
 	if 'start' in update.message.text:
-		update.message.reply_message(HELP_MESSAGE)
+		update.message.reply_text(HELP_MESSAGE)
 
 if __name__ == '__main__':
 	loop()
