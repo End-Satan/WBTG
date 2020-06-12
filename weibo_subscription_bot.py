@@ -36,6 +36,7 @@ db = DB()
 	
 def getResults(url):
 	content = sg.getContent(url)
+	print(url)
 	content = yaml.load(content, Loader=yaml.FullLoader)
 	try:
 		content['data']['cards']
@@ -46,15 +47,16 @@ def getResults(url):
 			continue
 		if 'type=uid' not in url and not shouldSend(db, card):
 			continue
-		if not db.existing.add(hash(card['raw_text'])):
+		if not db.existing.add(hash(card['text'])):
 			continue
 		yield weibo_2_album.get(clearUrl(card['scheme']))
 
 def process(url, key):
-	channels = db.subscription.channels(bot, key)
+	channels = db.subscription.channels(tele.bot, key)
 	if not channels:
 		return
 	for item in getResults(url):
+		print(item.url)
 		for channel in channels:
 			try:
 				album_sender.send_v2(channel, item)

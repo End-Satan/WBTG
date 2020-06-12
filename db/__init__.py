@@ -76,10 +76,13 @@ class Subscription(object):
 			except:
 				...
 
-	def channels(self, text):
+	def channels(self, bot, text):
 		for chat_id in self.sub:
 			if text in self.sub.get(chat_id, []):
-				yield chat_id
+				try:
+					yield bot.get_chat(chat_id)
+				except:
+					...
 
 	def save(self):
 		with open('db/subscription', 'w') as f:

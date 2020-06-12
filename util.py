@@ -17,12 +17,8 @@ def getCount(blog):
 	return count
 
 def shouldSend(db, card):
-	if matchKey(str(card), db.whitelist.items):
-		return True
 	if matchKey(str(card), db.blacklist.items):
 		return False
-	if matchKey(str(card), db.preferlist.items):
-		return getCount(card.get('mblog')) > 300
 	if matchKey(str(card), db.popularlist.items):
-		return getCount(card.get('mblog')) > 10000
-	return getCount(card.get('mblog')) > 1000
+		return getCount(card.get('mblog')) > 1000
+	return getCount(card.get('mblog')) > 100
