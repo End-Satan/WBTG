@@ -29,25 +29,60 @@ class DBItem(object):
 class Subscription(object):
 	def __init__(self):
 		with open('db/subscription') as f:
-			self.subscription = yaml.load(f, Loader=yaml.FullLoader)
+			self.sub = yaml.load(f, Loader=yaml.FullLoader)
 
 	def add(self, chat_id, text):
-		pass
+		if not text:
+			return
+		try:
+			user_id = text.strip('/').split('/')[-1]
+			int(user_id)
+			text = user_id
+		except:
+			...
+		self.sub[chat_id] = self.sub.get(chat_id, []) + [text]
+		self.save()
 
 	def remove(self, chat_id, text):
-		...
+		self.sub[chat_id] = self.sub.get(chat_id, [])
+		try:
+			self.sub[chat_id].remove(text)
+		except:
+			...
 
 	def get(self, chat_id):
-		...
+		return '当前订阅：' + ' '.join(self.sub.get(chat_id, []))
+
+	def subscriptions(self):
+		result = set()
+		for chat_id in self.sub:
+			for item in self.sub.get(chat_id, []):
+				result.add(item)
+		return result
 
 	def keywords(self):
-		...
+		for item in self.subscriptions():
+			try:
+				int(item)
+			except:
+				yield item
 
 	def users(self):
-		...
+		for item in self.subscriptions():
+			try:
+				int(item)
+				yield item
+			except:
+				...
 
 	def channels(self, text):
-		...
+		for chat_id in self.sub:
+			if text in self.sub.get(chat_id, []):
+				yield chat_id
+
+	def save(self, text):
+		with open('db/subscription', 'w') as f:
+			f.write(yaml.dump(self.sub, sort_keys=True, indent=2, allow_unicode=True))
 
 class DB(object):
 	def __init__(self):
