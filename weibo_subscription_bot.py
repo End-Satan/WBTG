@@ -13,10 +13,22 @@ import weibo_2_album
 import urllib
 
 with open('credential') as f:
-	credential = yaml.load(f, Loader=yaml.FullLoader)
+	tele = Updater(f.read(), use_context=True) # @weibo_subscription_bot
 
-tele = Updater(credential['bot_token'], use_context=True) # @weibo_subscription_bot
 debug_group = tele.bot.get_chat(420074357)
+
+HELP_MESSAGE = '''
+本bot负责订阅微博信息。
+
+可用命令：
+/wb_subscribe 用户ID/关键词/用户链接 - 订阅
+/wb_unsubscribe 用户ID/关键词/用户链接 - 取消订阅
+/wb_view - 查看当前订阅
+
+本bot在群组/频道中亦可使用。
+
+Github： https://github.com/gaoyunzhi/weibo_subscription_bot
+'''
 
 sg = SoupGet()
 db = DB()
@@ -115,5 +127,23 @@ def loop():
 	loopImp()
 	threading.Timer(60 * 10, loop).start() 
 
+@log_on_fail(debug_group)
+def handleCommand(update, context):
+	try:
+		if 'start' in update.effective_message.text:
+			return update.effective_message.reply_text(START_MESSAGE, quote=False)
+		manageImp(update.effective_message, context.bot)
+	except Exception as e:
+		print(e)
+		tb.print_exc()
+
+def handleHelp(update, context):
+	update.message.reply_message(HELP_MESSAGE)
+
 if __name__ == '__main__':
 	loop()
+	dp = tele.dispatcher
+	dp.add_handler(MessageHandler(Filters.command, handleCommand))
+	dp.add_handler(MessageHandler(Filters.private & (~Filters.command), handleHelp))
+	updater.start_polling()
+	updater.idle()
