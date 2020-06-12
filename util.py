@@ -20,5 +20,5 @@ def shouldSend(db, card):
 	if matchKey(str(card), db.blacklist.items):
 		return False
 	if matchKey(str(card), db.popularlist.items):
-		return getCount(card.get('mblog')) > 1000
-	return getCount(card.get('mblog')) > 100
+		return getCount(card.get('mblog')) > 10000
+	return getCount(card.get('mblog')) > 1000
