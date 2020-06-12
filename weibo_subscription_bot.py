@@ -125,7 +125,7 @@ def loop():
 @log_on_fail(debug_group)
 def handleCommand(update, context):
 	msg = update.message
-	if not msg or not msg.text.startwith('/wb'):
+	if not msg or not msg.text.startswith('/wb'):
 		return
 	command, text = splitCommand(msg.text)
 	if 'unsubscribe' in command:
