@@ -17,10 +17,11 @@ class DBItem(object):
 	def add(self, x):
 		x = str(x).strip()
 		if not x or x in self.items:
-			return
+			return False
 		self.items.add(x)
 		with open(self.fn, 'a') as f:
 			f.write('\n' + x)
+		return True
 
 	def contains(self, x):
 		x = str(x).strip()
