@@ -45,7 +45,7 @@ def getResults(url):
 		result = weibo_2_album.get(clearUrl(card['scheme']))
 		if not db.existing.add(result.hash):
 			continue
-		print(clearUrl(card['scheme']), result.hash)
+		debug_group.send_message(clearUrl(card['scheme']) + ' ' + str(result.hash))
 		yield result
 
 def process(url, key):
