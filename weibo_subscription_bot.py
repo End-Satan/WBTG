@@ -104,8 +104,8 @@ def process(url):
 		except:
 			continue
 		url = clearUrl(card['scheme'])
-		print(url, card) # see if we can calculate hash based on card
-		
+		if 'retweeted_status' in card:
+			print(url, card) # see if we can calculate hash based on card
 
 @log_on_fail(debug_group)
 def loopImp():
