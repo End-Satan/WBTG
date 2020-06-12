@@ -36,18 +36,14 @@ db = DB()
 	
 def getResults(url):
 	content = sg.getContent(url)
-	print(url)
 	content = yaml.load(content, Loader=yaml.FullLoader)
-	try:
-		content['data']['cards']
-	except:
-		return # url read fail, may due to rate limiting
 	for card in content['data']['cards']:
 		if 'scheme' not in card:
 			continue
 		if 'type=uid' not in url and not shouldSend(db, card):
 			continue
-		if not db.existing.add(hash(card['text'])):
+		print(card['mblog']['raw_text'])
+		if not db.existing.add(hash(card['mblog']['raw_text'])):
 			continue
 		yield weibo_2_album.get(clearUrl(card['scheme']))
 
