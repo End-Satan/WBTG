@@ -42,9 +42,10 @@ def getResults(url):
 			continue
 		if 'type=uid' not in url and not shouldSend(db, card):
 			continue
-		if not db.existing.add(hash(card['mblog']['raw_text'])):
+		result = weibo_2_album.get(clearUrl(card['scheme']))
+		if not db.existing.add(result.hash):
 			continue
-		yield weibo_2_album.get(clearUrl(card['scheme']))
+		yield result
 
 def process(url, key):
 	channels = db.subscription.channels(tele.bot, key)
