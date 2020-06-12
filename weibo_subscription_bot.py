@@ -129,21 +129,24 @@ def loop():
 
 @log_on_fail(debug_group)
 def handleCommand(update, context):
-	try:
-		if 'start' in update.effective_message.text:
-			return update.effective_message.reply_text(START_MESSAGE, quote=False)
-		manageImp(update.effective_message, context.bot)
-	except Exception as e:
-		print(e)
-		tb.print_exc()
+	msg = update.message
+	if not msg or not msg.text.startwith('/wb'):
+		return
+	
+
 
 def handleHelp(update, context):
 	update.message.reply_message(HELP_MESSAGE)
+
+def handleStart(update, context):
+	if 'start' in update.message.text:
+		update.message.reply_message(HELP_MESSAGE)
 
 if __name__ == '__main__':
 	loop()
 	dp = tele.dispatcher
 	dp.add_handler(MessageHandler(Filters.command, handleCommand))
 	dp.add_handler(MessageHandler(Filters.private & (~Filters.command), handleHelp))
+	dp.add_handler(MessageHandler(Filters.private & Filters.command, handleStart), group=2)
 	updater.start_polling()
 	updater.idle()
