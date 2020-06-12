@@ -25,6 +25,10 @@ class DBItem(object):
 			f.write('\n' + x)
 		return True
 
+	def contains(self, x):
+		x = str(x).strip()
+		return x in self.items
+
 class Subscription(object):
 	def __init__(self):
 		with open('db/subscription') as f:
@@ -89,9 +93,18 @@ class Subscription(object):
 
 class Existing(object):
 	def __init__(self):
-		fn = 'existing_' + uuid.getnode()
-		self.current = DBItem(fn)
-		for fn in os.listdir('db'):self.all
+		current_fn = 'existing_' + str(uuid.getnode())
+		self.current = DBItem(current_fn)
+		self.all = []
+		for fn in os.listdir('db'):
+			if fn.startswith('existing') and fn != current_fn:
+				self.all.append(DBItem(fn))
+
+	def add(self, item):
+		for dbitem in self.all:
+			if dbitem.contains(item):
+				return False
+		return self.current.add(item)
 
 class DB(object):
 	def __init__(self):
