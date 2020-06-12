@@ -99,6 +99,10 @@ def process(url):
 	except:
 		return # url read fail, may due to rate limiting
 	for card in content['data']['cards']:
+		try:
+			card['scheme']
+		except:
+			continue
 		url = clearUrl(card['scheme'])
 		print(url, card) # see if we can calculate hash based on card
 		
