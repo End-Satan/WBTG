@@ -128,9 +128,9 @@ def handleCommand(update, context):
 	if not msg or not msg.text.startswith('/wb'):
 		return
 	command, text = splitCommand(msg.text)
-	if 'unsubscribe' in command:
+	if 'unsub' in command:
 		db.subscription.remove(msg.chat_id, text)
-	elif 'subscribe' in command:
+	elif 'sub' in command:
 		db.subscription.add(msg.chat_id, text)
 	msg.reply_text(db.subscription.get(msg.chat_id))
 

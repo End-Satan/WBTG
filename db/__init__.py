@@ -80,7 +80,7 @@ class Subscription(object):
 			if text in self.sub.get(chat_id, []):
 				yield chat_id
 
-	def save(self, text):
+	def save(self):
 		with open('db/subscription', 'w') as f:
 			f.write(yaml.dump(self.sub, sort_keys=True, indent=2, allow_unicode=True))
 
