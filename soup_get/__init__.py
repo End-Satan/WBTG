@@ -30,7 +30,7 @@ class SoupGet(object):
 
 	def getContent(self, url):
 		self.num_requests += 1
-		wait = min(random.random() * 10, self.num_requests / 3 * random.random())
+		wait = min(random.random() * 30, self.num_requests * random.random())
 		self.timer.wait(wait)
 		return cached_url.get(url, 
 			headers = {'cookie': credential['cookie']})
