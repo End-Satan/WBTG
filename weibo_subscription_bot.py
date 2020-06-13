@@ -98,7 +98,7 @@ def handleStart(update, context):
 		update.message.reply_text(HELP_MESSAGE)
 
 if __name__ == '__main__':
-	loop()
+	threading.Timer(1, loop).start() 
 	dp = tele.dispatcher
 	dp.add_handler(MessageHandler(Filters.command, handleCommand))
 	dp.add_handler(MessageHandler(Filters.private & (~Filters.command), handleHelp))
