@@ -80,7 +80,7 @@ def loop():
 
 @log_on_fail(debug_group)
 def handleCommand(update, context):
-	msg = update.message
+	msg = update.effective_message
 	if not msg or not msg.text.startswith('/wb'):
 		return
 	command, text = splitCommand(msg.text)
