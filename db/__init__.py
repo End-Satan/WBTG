@@ -14,6 +14,8 @@ class Subscription(object):
 		user_id = text.strip('/').split('/')[-1]
 		if isInt(user_id):
 			text = user_id
+		if text in self.sub.get(chat_id, []):
+			return
 		self.sub[chat_id] = self.sub.get(chat_id, []) + [text]
 		self.save()
 
