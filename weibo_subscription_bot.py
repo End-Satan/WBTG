@@ -28,8 +28,8 @@ def shouldProcess(channel, card, key):
 # a hack, we can fetch the single item again, but weibo will 
 # be unhappy about the frequent calls
 def removeSeeMore(result): 
-	print(result.cap[-40:])
-	result.cap = result.cap.rstrip('全文')
+	pivot = '[全文](/status/'
+	result.cap = result.cap.split(pivot)[0]
 
 def process(key):
 	channels = subscription.channels(tele.bot, key)
