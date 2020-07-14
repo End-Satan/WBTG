@@ -62,6 +62,6 @@ class Subscription(object):
 			f.write(yaml.dump(self.sub, sort_keys=True, indent=2, allow_unicode=True))
 
 existing = plain_db.loadKeyOnlyDB('existing')
-blacklist = plain_db.loadKeyOnlyDB('blacklist')
+blocklist = plain_db.loadKeyOnlyDB('blocklist')
 popularlist = plain_db.loadKeyOnlyDB('popularlist')
 subscription = Subscription()

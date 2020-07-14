@@ -1,7 +1,7 @@
 from telegram.ext import MessageHandler, Filters
 from telegram_util import log_on_fail, splitCommand, commitRepo
 from common import debug_group
-from db import subscription
+from db import subscription, blocklist, popularlist
 
 @log_on_fail(debug_group)
 def handleCommand(update, context):
