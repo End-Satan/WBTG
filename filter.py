@@ -2,7 +2,7 @@ from telegram_util import matchKey, isInt
 from db import subscription, blocklist, popularlist
 import weiboo
 
-def shouldApplyFilter(channel_id, key)
+def shouldApplyFilter(channel_id, key):
 	if isInt(key):
 		return subscription.filterOnUser(channel_id):
 	return subscription.filterOnKey(channel_id)
