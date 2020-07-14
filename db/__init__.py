@@ -29,6 +29,13 @@ class DBItem(object):
 		x = str(x).strip()
 		return x in self.items
 
+def isInt(item):
+	try:
+		int(item)
+		return True
+	except:
+		return False
+
 class Subscription(object):
 	def __init__(self):
 		with open('db/subscription') as f:
@@ -37,6 +44,7 @@ class Subscription(object):
 	def add(self, chat_id, text):
 		if not text:
 			return
+		text = text.split('?')[0]
 		try:
 			user_id = text.strip('/').split('/')[-1]
 			int(user_id)
@@ -44,7 +52,6 @@ class Subscription(object):
 		except:
 			...
 		self.sub[chat_id] = self.sub.get(chat_id, []) + [text]
-		self.save()
 
 	def remove(self, chat_id, text):
 		self.sub[chat_id] = self.sub.get(chat_id, [])
@@ -56,7 +63,7 @@ class Subscription(object):
 	def get(self, chat_id):
 		return '当前订阅：' + ' '.join(self.sub.get(chat_id, []))
 
-	def subscriptions(self):
+	def _subscriptions(self):
 		result = set()
 		for chat_id in self.sub:
 			for item in self.sub.get(chat_id, []):
@@ -64,27 +71,21 @@ class Subscription(object):
 		return result
 
 	def keywords(self):
-		for item in self.subscriptions():
-			try:
-				int(item)
-			except:
-				yield item
+		return [item for item in self._subscriptions() if not isInt(item)]
 
 	def users(self):
-		for item in self.subscriptions():
-			try:
-				int(item)
-				yield item
-			except:
-				...
+		return [item for item in self._subscriptions() if isInt(item)]
 
-	def channels(self, bot, text):
+	def _channels(self, bot, text):
 		for chat_id in self.sub:
 			if text in self.sub.get(chat_id, []):
 				try:
 					yield bot.get_chat(chat_id)
 				except:
 					...
+
+	def channels(self, bot, text):
+		return list(self._channels(bot, text))
 
 	def save(self):
 		with open('db/subscription', 'w') as f:
@@ -115,3 +116,5 @@ class DB(object):
 		self.blacklist = DBItem('blacklist')
 		self.popularlist = DBItem('popularlist')
 		self.subscription = Subscription()
+
+db = DB()
