@@ -4,9 +4,30 @@ from common import debug_group
 from db import subscription, blocklist, popularlist
 
 @log_on_fail(debug_group)
+def handleAdmin(msg):
+	if not msg.from_user or msg.from_user.id != debug_group.id:
+		return
+	command, text = splitCommand(msg.text)
+	if not text:
+		return
+	success = False
+	if command == '/abl':
+		blocklist.add(text)
+		success = True
+	if commnad == '/apl':
+		popularlist.add(text)
+		success = True
+	if success:
+		msg.reply_text('succss')
+		commitRepo(delay=0)
+
+@log_on_fail(debug_group)
 def handleCommand(update, context):
 	msg = update.effective_message
-	if not msg or not msg.text.startswith('/wb'):
+	if not msg:
+		return
+	handleAdmin(msg)
+	if not msg.text.startswith('/wb'):
 		return
 	command, text = splitCommand(msg.text)
 	if 'unsub' in command:
