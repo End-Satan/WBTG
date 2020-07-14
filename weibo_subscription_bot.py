@@ -25,7 +25,7 @@ def shouldProcess(channel, card, key):
 	return True
 
 def process(key):
-	channels = subscription.channels(key)
+	channels = subscription.channels(tele.bot, key)
 	for url, card in weiboo.search(key, force_cache=True):
 		result = None
 		for channel in channels:
