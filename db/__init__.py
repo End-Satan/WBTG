@@ -1,6 +1,18 @@
 import plain_db
 from telegram_util import isInt
 import yaml
+import weiboo
+
+existing = plain_db.loadKeyOnlyDB('existing')
+blocklist = plain_db.loadKeyOnlyDB('blocklist')
+popularlist = plain_db.loadKeyOnlyDB('popularlist')
+weibo_name = plain_db.load('weibo_name', isIntValue=False)
+
+def searchUser(text):
+	for key, value in weibo_name.items.items():
+		if text in [key, value]:
+			return key, value
+	return weiboo.searchUser(text)
 
 class Subscription(object):
 	def __init__(self):
@@ -12,8 +24,10 @@ class Subscription(object):
 			return
 		text = text.split('?')[0]
 		user_id = text.strip('/').split('/')[-1]
-		if isInt(user_id):
-			text = user_id
+		result = searchUser(text)
+		if result:
+			text = result[0]
+			weibo_name.update(result[0], result[1])
 		if text in self.sub.get(chat_id, []):
 			return
 		self.sub[chat_id] = self.sub.get(chat_id, []) + [text]
@@ -64,7 +78,4 @@ class Subscription(object):
 		with open('db/subscription', 'w') as f:
 			f.write(yaml.dump(self.sub, sort_keys=True, indent=2, allow_unicode=True))
 
-existing = plain_db.loadKeyOnlyDB('existing')
-blocklist = plain_db.loadKeyOnlyDB('blocklist')
-popularlist = plain_db.loadKeyOnlyDB('popularlist')
 subscription = Subscription()
