@@ -31,7 +31,8 @@ class Subscription(object):
 		result = set()
 		for chat_id in self.sub:
 			for item in self.sub.get(chat_id, []):
-				result.add(item)
+				if 'filter' not in item:
+					result.add(item)
 		return result
 
 	def _channels(self, bot, text):
@@ -44,6 +45,17 @@ class Subscription(object):
 
 	def channels(self, bot, text):
 		return list(self._channels(bot, text))
+
+	# by default, we don't do filter
+	def filterOnUser(self, chat_id):
+		return 'filter_on_user' in self.sub.get(chat_id, [])
+
+	# by default, we do filter
+	def filterOnKey(self, chat_id):
+		return 'no_filter_on_key' not in self.sub.get(chat_id, [])
+
+	def hasMasterFilter(self, chat_id):
+		return 'has_master_filter' in self.sub.get(chat_id, [])
 
 	def save(self):
 		with open('db/subscription', 'w') as f:

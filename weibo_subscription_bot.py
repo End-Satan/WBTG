@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from telegram_util import log_on_fail, removeOldFiles, getLogStr
+from telegram_util import log_on_fail, removeOldFiles, getLogStr, isInt
 import album_sender
 from db import subscription, existing
 import threading
@@ -13,8 +13,10 @@ import weiboo
 
 processed_channels = set()
 
-def shouldProcess(channel, card):
+def shouldProcess(channel, card, key):
 	if channel.id in processed_channels:
+		return False
+	if not passFilter(channel, card, key):
 		return False
 	whash = weiboo.getHash(card) + str(channel.id)
 	if not existing.add(whash):
@@ -24,10 +26,10 @@ def shouldProcess(channel, card):
 
 def process(key):
 	channels = subscription.channels(key)
-	for url, card in weiboo.search(key):
+	for url, card in weiboo.search(key, force_cache=True):
 		result = None
 		for channel in channels:
-			if not shouldProcess(channel, card):
+			if not shouldProcess(channel, card, key):
 				continue
 			if not result:
 				result = weibo_2_album.get(url, card.get('mblog'))
