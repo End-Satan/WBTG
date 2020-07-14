@@ -14,7 +14,7 @@ def handleAdmin(msg):
 	if command == '/abl':
 		blocklist.add(text)
 		success = True
-	if commnad == '/apl':
+	if command == '/apl':
 		popularlist.add(text)
 		success = True
 	if success:
