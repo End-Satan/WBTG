@@ -27,11 +27,8 @@ def shouldProcess(channel, card, key):
 
 # a hack, we can fetch the single item again, but weibo will 
 # be unhappy about the frequent calls
-def removeSeeMore(card): 
-	card['mblog']['text'] = card['mblog']['text'].strip()
-	print(card['mblog']['text'][-10:], card['mblog']['text'].endswith('全文'))
-	if card['mblog']['text'].endswith('全文'):
-		card['mblog']['text'] = card['mblog']['text'][:-2]
+def removeSeeMore(result): 
+	result.cap = result.cap.rstrip('全文')
 
 def process(key):
 	channels = subscription.channels(tele.bot, key)
@@ -48,9 +45,9 @@ def process(key):
 			if not shouldProcess(channel, card, key):
 				continue
 			print(url, channel.id, channel.username)
-			removeSeeMore(card)
 			if not result:
 				result = weibo_2_album.get(url, card['mblog'])
+				removeSeeMore(result)
 			try:
 				album_sender.send_v2(channel, result)
 			except Exception as e:
