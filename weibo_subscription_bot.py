@@ -5,7 +5,6 @@ from telegram_util import clearUrl, log_on_fail, removeOldFiles, commitRepo, spl
 from telegram.ext import Updater, MessageHandler, Filters
 import yaml
 import album_sender
-from soup_get import SoupGet, Timer
 from db import DB
 import threading
 import weibo_2_album
@@ -31,11 +30,11 @@ HELP_MESSAGE = '''
 Github： https://github.com/gaoyunzhi/weibo_subscription_bot
 '''
 
-sg = SoupGet()
 db = DB()
 	
 def getResults(url):
-	content = sg.getContent(url)
+	content = cached_url.get(url, 
+			headers = {'cookie': credential['cookie']}, sleep = 30)
 	content = yaml.load(content, Loader=yaml.FullLoader)
 	for card in content['data']['cards']:
 		if 'scheme' not in card:
