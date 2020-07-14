@@ -28,6 +28,7 @@ def shouldProcess(channel, card, key):
 # a hack, we can fetch the single item again, but weibo will 
 # be unhappy about the frequent calls
 def removeSeeMore(card): 
+	card['mblog']['text'] = card['mblog']['text'].strip()
 	if card['mblog']['text'].endswith('全文'):
 		card['mblog']['text'] = card['mblog']['text'][:-2]
 
