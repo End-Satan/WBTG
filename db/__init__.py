@@ -96,7 +96,7 @@ class Subscription(object):
 		return 'noFilterOnKey' not in self.sub.get(chat_id, [])
 
 	def hasMasterFilter(self, chat_id):
-		return 'hasMaterFilter' in self.sub.get(chat_id, [])
+		return 'hasMasterFilter' in self.sub.get(chat_id, [])
 
 	def save(self):
 		with open('db/subscription', 'w') as f:
