@@ -22,7 +22,7 @@ def tooOld(card):
 	if len(created_at) != 5:
 		return False
 	return created_at <= '07-13'
-	
+
 def passFilter(channel, card, key):
 	if tooOld(card): # for hash migration
 		return False
