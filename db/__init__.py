@@ -12,7 +12,33 @@ def searchUser(text):
 	for key, value in weibo_name.items.items():
 		if text in [key, value]:
 			return key, value
-	return weiboo.searchUser(text)
+	result = weiboo.searchUser(text)
+	if result:
+		weibo_name.update(result[0], result[1])
+	return result
+
+def clearText(text):
+	text = text.split('?')[0]
+	return text.strip('/').split('/')[-1]
+
+def getMatches(text):
+	if not text:
+		return []
+	text = clearText(text)
+	user = searchUser(text)
+	if user:
+		return user
+	return [text]
+
+def getDisplay(item):
+	display_name = weibo_name.get(item)
+	if isInt(item) and not display_name:
+		display_name = item
+	if display_name:
+		return '[%s](https://m.weibo.cn/u/%s)' % (display_name, item)
+	return item
+
+
 
 class Subscription(object):
 	def __init__(self):
@@ -20,29 +46,28 @@ class Subscription(object):
 			self.sub = yaml.load(f, Loader=yaml.FullLoader)
 
 	def add(self, chat_id, text):
-		if not text:
+		matches = getMatches(text)
+		if not matches:
 			return
-		text = text.split('?')[0]
-		user_id = text.strip('/').split('/')[-1]
-		result = searchUser(text)
-		if result:
-			text = result[0]
-			weibo_name.update(result[0], result[1])
-		if text in self.sub.get(chat_id, []):
-			return
-		self.sub[chat_id] = self.sub.get(chat_id, []) + [text]
-		self.save()
+		for text in matches:
+			if text not in self.sub.get(chat_id, []):
+				self.sub[chat_id] = self.sub.get(chat_id, []) + [text]
+				self.save()
+				return
 
 	def remove(self, chat_id, text):
-		self.sub[chat_id] = self.sub.get(chat_id, [])
-		try:
-			self.sub[chat_id].remove(text)
-		except:
-			...
-		self.save()
+		matches = getMatches(text)
+		if not matches:
+			return
+		for text in matches:
+			if text in self.sub.get(chat_id, []):
+				self.sub[chat_id].remove(text)
+				self.save()
+				return
 
 	def get(self, chat_id):
-		return '当前订阅：' + ' '.join(self.sub.get(chat_id, []))
+		return '当前订阅：' + ' '.join([
+			getDisplay(item) for item in self.sub.get(chat_id, [])])
 
 	def subscriptions(self):
 		result = set()

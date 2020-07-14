@@ -34,7 +34,8 @@ def handleCommand(update, context):
 		subscription.remove(msg.chat_id, text)
 	elif 'sub' in command:
 		subscription.add(msg.chat_id, text)
-	msg.reply_text(subscription.get(msg.chat_id))
+	msg.reply_text(subscription.get(msg.chat_id), 
+		parse_mode='markdown', disable_web_page_preview=True)
 	if 'sub' in command:
 		commitRepo(delay_minute=0)
 
