@@ -63,18 +63,12 @@ class Subscription(object):
 	def get(self, chat_id):
 		return '当前订阅：' + ' '.join(self.sub.get(chat_id, []))
 
-	def _subscriptions(self):
+	def subscriptions(self):
 		result = set()
 		for chat_id in self.sub:
 			for item in self.sub.get(chat_id, []):
 				result.add(item)
 		return result
-
-	def keywords(self):
-		return [item for item in self._subscriptions() if not isInt(item)]
-
-	def users(self):
-		return [item for item in self._subscriptions() if isInt(item)]
 
 	def _channels(self, bot, text):
 		for chat_id in self.sub:
