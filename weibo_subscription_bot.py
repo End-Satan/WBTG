@@ -10,6 +10,7 @@ from command import setupCommand
 from common import debug_group, tele
 import weiboo
 import random
+from filter import passFilter
 
 processed_channels = set()
 
