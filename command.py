@@ -19,7 +19,7 @@ def handleAdmin(msg):
 		success = True
 	if success:
 		msg.reply_text('succss')
-		commitRepo(delay=0)
+		commitRepo(delay_minute=0)
 
 @log_on_fail(debug_group)
 def handleCommand(update, context):
@@ -36,7 +36,7 @@ def handleCommand(update, context):
 		subscription.add(msg.chat_id, text)
 	msg.reply_text(subscription.get(msg.chat_id))
 	if 'sub' in command:
-		commitRepo(delay=0)
+		commitRepo(delay_minute=0)
 
 with open('help.md') as f:
 	HELP_MESSAGE = f.read()
