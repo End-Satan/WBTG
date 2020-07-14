@@ -1,7 +1,7 @@
 from telegram.ext import MessageHandler, Filters
-from telegram_util import log_on_fail, splitCommand
+from telegram_util import log_on_fail, splitCommand, commitRepo
 from common import debug_group
-from db import db
+from db import subscription
 
 @log_on_fail(debug_group)
 def handleCommand(update, context):
@@ -10,12 +10,12 @@ def handleCommand(update, context):
 		return
 	command, text = splitCommand(msg.text)
 	if 'unsub' in command:
-		db.subscription.remove(msg.chat_id, text)
+		subscription.remove(msg.chat_id, text)
 	elif 'sub' in command:
-		db.subscription.add(msg.chat_id, text)
-	msg.reply_text(db.subscription.get(msg.chat_id))
+		subscription.add(msg.chat_id, text)
+	msg.reply_text(subscription.get(msg.chat_id))
 	if 'sub' in command:
-		db.subscription.save()
+		commitRepo(delay=0)
 
 with open('help.md') as f:
 	HELP_MESSAGE = f.read()
