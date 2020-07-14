@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from telegram_util import log_on_fail, removeOldFiles, getLogStr, isInt
+from telegram_util import log_on_fail, removeOldFiles, getLogStr
 import album_sender
 from db import subscription, existing
 import threading
 import weibo_2_album
-from util import shouldSend
 from command import setupCommand
 from common import debug_group, tele
 import weiboo
+import random
 
 processed_channels = set()
 
@@ -30,13 +30,16 @@ def process(key):
 		result = None
 		for channel in channels:
 			if not shouldProcess(channel, card, key):
+				print(url, channel.id, False)
 				continue
+			print(url, channel.id, True)
 			if not result:
 				result = weibo_2_album.get(url, card.get('mblog'))
 			try:
 				album_sender.send_v2(channel, result)
 			except Exception as e:
 				debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
+				raise e
 
 @log_on_fail(debug_group)
 def loopImp():

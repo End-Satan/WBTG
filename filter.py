@@ -1,4 +1,4 @@
-from telegram_util import matchKey
+from telegram_util import matchKey, isInt
 from db import subscription, blocklist, popularlist
 import weiboo
 
