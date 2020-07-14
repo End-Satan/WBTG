@@ -1,5 +1,6 @@
 import plain_db
 from telegram_util import isInt
+import yaml
 
 class Subscription(object):
 	def __init__(self):
