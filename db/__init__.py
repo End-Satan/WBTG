@@ -72,7 +72,7 @@ class Subscription(object):
 		result = set()
 		for chat_id in self.sub:
 			for item in self.sub.get(chat_id, []):
-				if 'filter' not in item:
+				if 'filter' not in item.lower():
 					result.add(item)
 		return result
 
@@ -89,14 +89,14 @@ class Subscription(object):
 
 	# by default, we don't do filter
 	def filterOnUser(self, chat_id):
-		return 'filter_on_user' in self.sub.get(chat_id, [])
+		return 'filterOnUser' in self.sub.get(chat_id, [])
 
 	# by default, we do filter
 	def filterOnKey(self, chat_id):
-		return 'no_filter_on_key' not in self.sub.get(chat_id, [])
+		return 'noFilterOnKey' not in self.sub.get(chat_id, [])
 
 	def hasMasterFilter(self, chat_id):
-		return 'has_master_filter' in self.sub.get(chat_id, [])
+		return 'hasMaterFilter' in self.sub.get(chat_id, [])
 
 	def save(self):
 		with open('db/subscription', 'w') as f:
