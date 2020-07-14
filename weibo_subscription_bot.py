@@ -34,9 +34,8 @@ def process(key):
 		result = None
 		for channel in channels:
 			if not shouldProcess(channel, card, key):
-				print(url, channel.id, False)
 				continue
-			print(url, channel.id, True)
+			print(url, channel.id, channel.username)
 			if not result:
 				result = weibo_2_album.get(url, card.get('mblog'))
 			try:

@@ -17,7 +17,7 @@ def passMasterFilter(card):
 		return False
 	return weiboo.getCount(card) > 300
 
-def tooOld(card):
+def tooOld(card): # will remove may be after 07-20
 	created_at = card['mblog']['created_at']
 	if len(created_at) != 5:
 		return False
