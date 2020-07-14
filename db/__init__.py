@@ -38,8 +38,6 @@ def getDisplay(item):
 		return '[%s](https://m.weibo.cn/u/%s)' % (display_name, item)
 	return item
 
-
-
 class Subscription(object):
 	def __init__(self):
 		with open('db/subscription') as f:
@@ -66,8 +64,9 @@ class Subscription(object):
 				return
 
 	def get(self, chat_id):
-		return '当前订阅：' + ' '.join([
-			getDisplay(item) for item in self.sub.get(chat_id, [])])
+		result = [getDisplay(item) for item in self.sub.get(chat_id, [])]
+		result.sort()
+		return '当前订阅：' + ' '.join(result)
 
 	def subscriptions(self):
 		result = set()

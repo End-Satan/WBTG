@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from telegram_util import log_on_fail, removeOldFiles, getLogStr
+from telegram_util import log_on_fail, removeOldFiles, getLogStr, isInt
 import album_sender
-from db import subscription, existing
+from db import subscription, existing, weibo_name
 import threading
 import weibo_2_album
 from command import setupCommand
@@ -28,6 +28,10 @@ def shouldProcess(channel, card, key):
 def process(key):
 	channels = subscription.channels(tele.bot, key)
 	search_result = weiboo.search(key, force_cache=True)
+	if isInt(key): # backfill, can remove this part after 7/17
+		result = weiboo.searchUser(key)
+		if result:
+			weibo_name.update(result[0], result[1])
 	if not search_result:
 		print('no search result', key)
 	for url, card in search_result:
