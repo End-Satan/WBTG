@@ -10,16 +10,14 @@ from command import setupCommand
 from common import debug_group, tele
 import weiboo
 import random
-from filter import passFilter, tooOld, passMasterFilter, passKeyFilter
+from filter import passFilter
 
 processed_channels = set()
 
-def shouldProcess(channel, card, key, url=None): # url for debuggin purpose
+def shouldProcess(channel, card, key):
 	if channel.id in processed_channels:
 		return False
 	if not passFilter(channel, card, key):
-		if channel.id == -1001340272388:
-			print('Blocked by filter', url, tooOld(card), passMasterFilter(card), passKeyFilter(card))
 		return False
 	whash = weiboo.getHash(card) + str(channel.id)
 	if not existing.add(whash):
@@ -45,7 +43,7 @@ def process(key):
 	for url, card in search_result:
 		result = None
 		for channel in channels:
-			if not shouldProcess(channel, card, key, url):
+			if not shouldProcess(channel, card, key):
 				continue
 			print(url, channel.id, channel.username)
 			if not result:
