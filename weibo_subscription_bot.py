@@ -27,7 +27,10 @@ def shouldProcess(channel, card, key):
 
 def process(key):
 	channels = subscription.channels(tele.bot, key)
-	for url, card in weiboo.search(key, force_cache=True):
+	search_result = weiboo.search(key, force_cache=True)
+	if not search_result:
+		print('no search result', key)
+	for url, card in search_result:
 		result = None
 		for channel in channels:
 			if not shouldProcess(channel, card, key):
