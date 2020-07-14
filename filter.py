@@ -4,7 +4,7 @@ import weiboo
 
 def shouldApplyFilter(channel_id, key):
 	if isInt(key):
-		return subscription.filterOnUser(channel_id):
+		return subscription.filterOnUser(channel_id)
 	return subscription.filterOnKey(channel_id)
 
 def passKeyFilter(card):
