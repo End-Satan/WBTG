@@ -29,6 +29,7 @@ def shouldProcess(channel, card, key):
 # be unhappy about the frequent calls
 def removeSeeMore(card): 
 	card['mblog']['text'] = card['mblog']['text'].strip()
+	print(card['mblog']['text'][-10:], card['mblog']['text'].endswith('全文'))
 	if card['mblog']['text'].endswith('全文'):
 		card['mblog']['text'] = card['mblog']['text'][:-2]
 
