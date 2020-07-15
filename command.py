@@ -18,7 +18,7 @@ def handleAdmin(msg):
 		popularlist.add(text)
 		success = True
 	if success:
-		msg.reply_text('succss')
+		msg.reply_text('success')
 		commitRepo(delay_minute=0)
 
 @log_on_fail(debug_group)
