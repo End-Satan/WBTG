@@ -11,6 +11,7 @@ from common import debug_group, tele
 import weiboo
 import random
 from filter import passFilter
+import time
 
 processed_channels = set()
 
@@ -47,6 +48,7 @@ def process(key):
 				continue
 			print(url, channel.id, channel.username)
 			if not result:
+				time.sleep(30)
 				result = weibo_2_album.get(url, card['mblog'])
 				removeSeeMore(result)
 			try:
