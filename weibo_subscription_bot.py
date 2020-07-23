@@ -48,7 +48,7 @@ def process(key):
 				continue
 			print(url, channel.id, channel.username)
 			if not result:
-				time.sleep(30)
+				time.sleep(60)
 				result = weibo_2_album.get(url, card['mblog'])
 				removeSeeMore(result)
 			try:
