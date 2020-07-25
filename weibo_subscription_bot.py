@@ -63,7 +63,7 @@ def loopImp():
 	global processed_channels 
 	processed_channels = set()
 	for key in subscription.subscriptions():
-		if random.random() > 0.1:
+		if random.random() > 0.05:
 			continue
 		process(key)
 
