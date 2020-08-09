@@ -5,7 +5,6 @@ from db import subscription, blocklist, popularlist
 
 @log_on_fail(debug_group)
 def handleAdmin(msg):
-	print('msg.chat.username', msg.chat.username)
 	if msg.chat.username not in ['b4cxb', 'weibo_read', 'weibo_one']:
 		return
 	command, text = splitCommand(msg.text)
