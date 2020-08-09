@@ -1,5 +1,5 @@
 from telegram.ext import MessageHandler, Filters
-from telegram_util import log_on_fail, splitCommand, commitRepo
+from telegram_util import log_on_fail, splitCommand, commitRepo, tryDelete, autoDestroy
 from common import debug_group
 from db import subscription, blocklist, popularlist
 
@@ -18,7 +18,8 @@ def handleAdmin(msg):
 		popularlist.add(text)
 		success = True
 	if success:
-		msg.reply_text('success')
+		autoDestroy(msg.reply_text('success'), 0.1)
+		tryDelete(msg)
 		commitRepo(delay_minute=0)
 
 @log_on_fail(debug_group)
@@ -34,10 +35,14 @@ def handleCommand(update, context):
 		subscription.remove(msg.chat_id, text)
 	elif 'sub' in command:
 		subscription.add(msg.chat_id, text)
-	msg.reply_text(subscription.get(msg.chat_id), 
+	reply = msg.reply_text(subscription.get(msg.chat_id), 
 		parse_mode='markdown', disable_web_page_preview=True)
+	if msg.chat_id < 0:
+		tryDelete(msg)
 	if 'sub' in command:
 		commitRepo(delay_minute=0)
+		if msg.chat_id < 0:
+			autoDestroy(reply, 0.1)
 
 with open('help.md') as f:
 	HELP_MESSAGE = f.read()
