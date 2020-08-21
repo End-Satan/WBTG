@@ -31,6 +31,11 @@ def shouldProcess(channel, card, key):
 def removeSeeMore(result): 
 	pivot = '[全文](/status/'
 	result.cap = result.cap.split(pivot)[0]
+	if result.cap.endswith('...'):
+		total_len = len(result.cap)
+		last_period_index = result.cap.rfind('。')
+		if last_period_index > max(total_len / 2, total_len - 40):
+			result.cap = result.cap[:last_period_index + 1]
 
 def process(key):
 	channels = subscription.channels(tele.bot, key)
