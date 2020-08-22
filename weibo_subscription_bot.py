@@ -31,10 +31,10 @@ def shouldProcess(channel, card, key):
 def removeSeeMore(result): 
 	pivot = '[全文](/status/'
 	result.cap = result.cap.split(pivot)[0]
-	if result.cap.endswith('...'):
+	if result.cap.endswith('...') or result.cap.endswith('的微博视频'):
 		total_len = len(result.cap)
-		last_period_index = result.cap.rfind('。')
-		if last_period_index > max(total_len / 2, total_len - 40):
+		last_period_index = max(result.cap.rfind('。'), result.cap.rfind('？'))
+		if last_period_index > max(total_len / 2, total_len - 80):
 			result.cap = result.cap[:last_period_index + 1]
 
 def process(key):
