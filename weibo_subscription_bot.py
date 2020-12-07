@@ -40,7 +40,7 @@ def removeSeeMore(result):
 def process(key):
 	channels = subscription.channels(tele.bot, key)
 	search_result = weiboo.search(key, force_cache=True)
-	if isInt(key): # backfill, can remove this part after 7/17
+	if isInt(key): # backfill, may able to be removed
 		result = weiboo.searchUser(key)
 		if result:
 			weibo_name.update(result[0], result[1])
