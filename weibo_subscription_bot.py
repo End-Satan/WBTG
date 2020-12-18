@@ -68,13 +68,13 @@ def loopImp():
 	global processed_channels 
 	processed_channels = set()
 	for key in subscription.subscriptions():
-		if random.random() > 0.05:
+		if random.random() > 0.01:
 			continue
 		process(key)
 
 def loop():
 	loopImp()
-	threading.Timer(60 * 10, loop).start() 
+	threading.Timer(60 * 5, loop).start() 
 
 if __name__ == '__main__':
 	threading.Timer(1, loop).start() 
