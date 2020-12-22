@@ -42,14 +42,14 @@ def process(key):
 		for channel in channels:
 			if not shouldProcess(channel, card, key):
 				continue
-			if not result:
-				result = weibo_2_album.get(url, card['mblog'])
-				removeSeeMore(result)
 			try:
+				if not result:
+					result = weibo_2_album.get(url, card['mblog'])
+					removeSeeMore(result)
 				album_sender.send_v2(channel, result)
 			except Exception as e:
 				debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
-				raise e
+				return
 		if result:
 			return
 
