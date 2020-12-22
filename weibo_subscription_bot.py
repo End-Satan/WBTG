@@ -43,6 +43,7 @@ def process(key):
 			if not shouldProcess(channel, card, key):
 				continue
 			if not result:
+				print(url, channel.id, channel.username) # testing
 				result = weibo_2_album.get(url, card['mblog'])
 				removeSeeMore(result)
 			try:
