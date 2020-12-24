@@ -34,7 +34,10 @@ def removeSeeMore(result):
 
 def process(key):
 	channels = subscription.channels(tele.bot, key)
-	search_result = weiboo.search(key, force_cache=True)
+	try:
+		search_result = weiboo.search(key, force_cache=True)
+	except Exception as e:
+		print('search failed', key, str(e))
 	if not search_result:
 		print('no search result', key)
 	for url, card in search_result:
