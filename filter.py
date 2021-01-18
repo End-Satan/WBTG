@@ -1,4 +1,4 @@
-from telegram_util import matchKey, isInt
+from telegram_util import matchKey, isInt, clearUrl
 from db import subscription, blocklist, popularlist
 import weiboo
 
@@ -13,9 +13,10 @@ def passKeyFilter(card):
 	return weiboo.getCount(card) > 1000
 
 def passMasterFilter(card):
-	if matchKey(str(card), blocklist.items()):
-		print('wb_blocked', card)
-		return False
+	for item in blocklist.items():
+		if item in str(card):
+			print('wb_blocked', clearUrl(card.get('scheme')))
+			return False
 	return weiboo.getCount(card) > 300
 
 # def tooOld(card):
