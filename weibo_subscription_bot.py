@@ -17,6 +17,7 @@ def shouldProcess(channel, card, key):
 	if not passFilter(channel, card, key):
 		return False
 	whash = weiboo.getHash(card) + str(channel.id)
+	print('whash', whash)
 	if not existing.add(whash):
 		return False
 	return True
