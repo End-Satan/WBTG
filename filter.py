@@ -14,6 +14,7 @@ def passKeyFilter(card):
 
 def passMasterFilter(card):
 	if matchKey(str(card), blocklist.items()):
+		print('wb_blocked', card)
 		return False
 	return weiboo.getCount(card) > 300
 
