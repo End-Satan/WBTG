@@ -3,7 +3,7 @@
 
 from telegram_util import log_on_fail, removeOldFiles, getLogStr, isInt
 import album_sender
-from db import subscription, existing
+from db import subscription, existing, scheduled_key
 import threading
 import weibo_2_album
 from command import setupCommand
@@ -55,19 +55,17 @@ def process(key):
 				album_sender.send_v2(channel, result)
 			except Exception as e:
 				debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
-				return
-		if result:
-			return
+			finally:
+				time.sleep(120)
 
 @log_on_fail(debug_group)
 def loopImp():
-	removeOldFiles('tmp', day=0.1) # video could be very large
-	for key in subscription.subscriptions():
-		if random.random() > 0.01:
-			continue
-		process(key)
-		return
-
+	removeOldFiles('tmp', day=0.1)
+	if not scheduled_key:
+		for key in subscription.subscriptions():
+			scheduled_key.append(key)
+	process(scheduled_key.pop())
+		
 def loop():
 	loopImp()
 	threading.Timer(60 * 2, loop).start() 

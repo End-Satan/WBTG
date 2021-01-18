@@ -1,7 +1,7 @@
 from telegram.ext import MessageHandler, Filters
 from telegram_util import log_on_fail, splitCommand, commitRepo, tryDelete, autoDestroy
 from common import debug_group
-from db import subscription, blocklist, popularlist
+from db import subscription, blocklist, popularlist, scheduled_key
 
 @log_on_fail(debug_group)
 def handleAdmin(msg):
@@ -32,9 +32,14 @@ def handleCommand(update, context):
 		return
 	command, text = splitCommand(msg.text)
 	if 'unsub' in command:
-		subscription.remove(msg.chat_id, text)
+		result = subscription.remove(msg.chat_id, text)
+		try:
+			scheduled_key.remove(result)
+		except:
+			...
 	elif 'sub' in command:
-		subscription.add(msg.chat_id, text)
+		result = subscription.add(msg.chat_id, text)
+		scheduled_key.append(result)
 	reply = msg.reply_text(subscription.get(msg.chat_id), 
 		parse_mode='markdown', disable_web_page_preview=True)
 	if msg.chat_id < 0:

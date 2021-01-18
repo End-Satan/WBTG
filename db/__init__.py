@@ -7,6 +7,7 @@ existing = plain_db.loadKeyOnlyDB('existing')
 blocklist = plain_db.loadKeyOnlyDB('blocklist')
 popularlist = plain_db.loadKeyOnlyDB('popularlist')
 weibo_name = plain_db.load('weibo_name', isIntValue=False)
+scheduled_key = []
 
 def searchUser(text):
 	for key, value in weibo_name.items.items():
@@ -51,7 +52,7 @@ class Subscription(object):
 			if text not in self.sub.get(chat_id, []):
 				self.sub[chat_id] = self.sub.get(chat_id, []) + [text]
 				self.save()
-				return
+				return text
 
 	def remove(self, chat_id, text):
 		matches = getMatches(text)
@@ -61,7 +62,7 @@ class Subscription(object):
 			if text in self.sub.get(chat_id, []):
 				self.sub[chat_id].remove(text)
 				self.save()
-				return
+				return text
 
 	def get(self, chat_id):
 		result = [getDisplay(item) for item in self.sub.get(chat_id, [])]
