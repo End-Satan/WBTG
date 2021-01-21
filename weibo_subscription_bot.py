@@ -63,6 +63,7 @@ def loopImp():
 	if not scheduled_key:
 		for key in subscription.subscriptions():
 			scheduled_key.append(key)
+		random.shuffle(scheduled_key)
 	process(scheduled_key.pop())
 		
 def loop():
