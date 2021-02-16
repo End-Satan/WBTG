@@ -19,11 +19,11 @@ def passMasterFilter(card):
 			return False
 	return weiboo.getCount(card) > 300
 
-# def tooOld(card):
-# 	created_at = card['mblog']['created_at']
-# 	if len(created_at) != 5:
-# 		return False
-# 	return created_at <= '12-07' # repository move date
+def tooOld(card):
+	created_at = card['mblog']['created_at']
+	if len(created_at) != 5:
+		return False
+	return created_at <= '2-15' # repository move date
 
 def passFilter(channel, card, key):
 	channel_id = channel.id

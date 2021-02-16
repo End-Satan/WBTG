@@ -32,6 +32,13 @@ def removeSeeMore(result):
 		if last_period_index > max(total_len / 2, total_len - 80):
 			result.cap = result.cap[:last_period_index + 1]
 
+def getResult(url, card, channels):
+	if set([channel.id for channel in channels]) & set([]): # set([-1001374366482, -1001340272388]):
+		return weibo_2_album.get(url)
+	result = weibo_2_album.get(url, card['mblog'])
+	removeSeeMore(result)
+	return result
+
 def process(key):
 	channels = subscription.channels(tele.bot, key)
 	try:
@@ -49,13 +56,16 @@ def process(key):
 				continue
 			try:
 				if not result:
-					result = weibo_2_album.get(url, card['mblog'])
-					removeSeeMore(result)
-				album_sender.send_v2(channel, result)
+					result = getResult(url, card, channels)
+				print(url, result.cap[:50].replace('\n', ' '))
+				with open('tmp_mblog', 'a') as f:
+					f.write(str(card['mblog']) + '\n\n')
+				# album_sender.send_v2(channel, result)
 			except Exception as e:
 				debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
 			finally:
-				time.sleep(120)
+				...
+				# time.sleep(120)
 
 @log_on_fail(debug_group)
 def loopImp():
@@ -68,7 +78,8 @@ def loopImp():
 		
 def loop():
 	loopImp()
-	threading.Timer(60 * 2, loop).start() 
+	threading.Timer(30, loop).start() 
+	# threading.Timer(60 * 2, loop).start() 
 
 if __name__ == '__main__':
 	threading.Timer(1, loop).start() 

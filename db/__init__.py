@@ -71,7 +71,7 @@ class Subscription(object):
 
 	def subscriptions(self):
 		result = set()
-		for chat_id in self.sub:
+		for chat_id in [-1001374366482]: # self.sub:
 			for item in self.sub.get(chat_id, []):
 				if 'filter' not in item.lower():
 					result.add(item)
