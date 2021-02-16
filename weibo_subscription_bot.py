@@ -36,7 +36,6 @@ def getResult(url, card, channels):
 	if '全文</a>' not in str(card['mblog']):
 		return weibo_2_album.get(url, card['mblog'])
 	if set([channel.id for channel in channels]) & set([-1001374366482, -1001340272388]):
-		print('fetching full', url)
 		return weibo_2_album.get(url)
 	result = weibo_2_album.get(url, card['mblog'])
 	removeSeeMore(result)
@@ -61,9 +60,6 @@ def process(key):
 			try:
 				if not result:
 					result = getResult(url, card, channels)
-				print(url, result.cap[:50].replace('\n', ' '))
-				with open('tmp_mblog', 'a') as f:
-					f.write(str(card['mblog']) + '\n\n')
 				posts = album_sender.send_v2(channel, result)
 			except Exception as e:
 				debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
