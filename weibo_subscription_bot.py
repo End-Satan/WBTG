@@ -57,18 +57,18 @@ def process(key):
 		for channel in channels:
 			if not shouldProcess(channel, card, key):
 				continue
+			posts = []
 			try:
 				if not result:
 					result = getResult(url, card, channels)
 				print(url, result.cap[:50].replace('\n', ' '))
 				with open('tmp_mblog', 'a') as f:
 					f.write(str(card['mblog']) + '\n\n')
-				# album_sender.send_v2(channel, result)
+				posts = album_sender.send_v2(channel, result)
 			except Exception as e:
 				debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
 			finally:
-				...
-				# time.sleep(120)
+				time.sleep((len(posts) ** 2) / 2 + len(posts) * 10)
 
 @log_on_fail(debug_group)
 def loopImp():
