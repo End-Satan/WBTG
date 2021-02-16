@@ -56,15 +56,16 @@ def process(key):
 		for channel in channels:
 			if not shouldProcess(channel, card, key):
 				continue
-			posts = []
+			result_posts = []
 			try:
 				if not result:
 					result = getResult(url, card, channels)
-				posts = album_sender.send_v2(channel, result)
+				result_posts = album_sender.send_v2(channel, result)
 			except Exception as e:
 				debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
 			finally:
-				time.sleep((len(posts or []) ** 2) / 2 + len(posts or []) * 10)
+				post_len = len(result_posts or [])
+				time.sleep((post_len ** 2) / 2 + post_len * 10)
 
 @log_on_fail(debug_group)
 def loopImp():
