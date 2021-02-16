@@ -33,7 +33,10 @@ def removeSeeMore(result):
 			result.cap = result.cap[:last_period_index + 1]
 
 def getResult(url, card, channels):
-	if set([channel.id for channel in channels]) & set([]): # set([-1001374366482, -1001340272388]):
+	if '全文</a>' not in str(card['mblog']):
+		return weibo_2_album.get(url, card['mblog'])
+	if set([channel.id for channel in channels]) & set([-1001374366482, -1001340272388]):
+		print('fetching full', url)
 		return weibo_2_album.get(url)
 	result = weibo_2_album.get(url, card['mblog'])
 	removeSeeMore(result)
