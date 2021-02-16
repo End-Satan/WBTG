@@ -64,7 +64,7 @@ def process(key):
 			except Exception as e:
 				debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
 			finally:
-				time.sleep((len(posts) ** 2) / 2 + len(posts) * 10)
+				time.sleep((len(posts or []) ** 2) / 2 + len(posts or []) * 10)
 
 @log_on_fail(debug_group)
 def loopImp():
