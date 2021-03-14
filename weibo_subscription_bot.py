@@ -21,27 +21,15 @@ def shouldProcess(channel, card, key):
 		return False
 	return True
 
-# a hack, we can fetch the single item again, but weibo will 
-# be unhappy about the frequent calls
-def removeSeeMore(result): 
-	pivot = '[全文](/status/'
-	result.cap = result.cap.split(pivot)[0]
-	if result.cap.endswith('...') or result.cap.endswith('的微博视频'):
-		total_len = len(result.cap)
-		last_period_index = max(result.cap.rfind('。'), result.cap.rfind('？'))
-		if last_period_index > max(total_len / 2, total_len - 80):
-			result.cap = result.cap[:last_period_index + 1]
-
 def getResult(url, card, channels):
 	if '全文</a>' not in str(card['mblog']):
 		return weibo_2_album.get(url, card['mblog'])
 	if set([channel.id for channel in channels]) & set([-1001374366482, -1001340272388, -1001427773894]):
 		return weibo_2_album.get(url)
-	result = weibo_2_album.get(url, card['mblog'])
-	removeSeeMore(result)
-	return result
+	return weibo_2_album.get(url, card['mblog'])
 
 def process(key):
+	print('process', key)
 	channels = subscription.channels(tele.bot, key)
 	try:
 		search_result = weiboo.search(key, force_cache=True)
