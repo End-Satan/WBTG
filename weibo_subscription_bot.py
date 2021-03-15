@@ -29,7 +29,6 @@ def getResult(url, card, channels):
 	return weibo_2_album.get(url, card['mblog'])
 
 def process(key):
-	print('process', key)
 	channels = subscription.channels(tele.bot, key)
 	try:
 		search_result = weiboo.search(key, force_cache=True)
