@@ -13,11 +13,13 @@ def passKeyFilter(card):
 	return weiboo.getCount(card) > 1000
 
 def passMasterFilter(card):
+	if weiboo.getCount(card) < 300:
+		return False
 	for item in blocklist.items():
 		if item in str(card):
 			print('wb_blocked', clearUrl(card.get('scheme')), item)
 			return False
-	return weiboo.getCount(card) > 300
+	return True
 
 def tooOld(card):
 	created_at = card['mblog']['created_at']
@@ -27,10 +29,10 @@ def tooOld(card):
 
 def passFilter(channel, card, key):
 	channel_id = channel.id
-	if (subscription.hasMasterFilter(channel_id) and 
-		not passMasterFilter(card)):
-		return False
 	if (shouldApplyFilter(channel_id, key) and 
 		not passKeyFilter(card)):
+		return False
+	if (subscription.hasMasterFilter(channel_id) and 
+		not passMasterFilter(card)):
 		return False
 	return True
