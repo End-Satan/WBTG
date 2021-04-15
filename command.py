@@ -11,7 +11,7 @@ def handleAdmin(msg):
 	if not text:
 		return
 	success = False
-	if command == '/abl':
+	if command == '/abl' and len(text) > 1:
 		blocklist.add(text)
 		success = True
 	if command == '/apl':
