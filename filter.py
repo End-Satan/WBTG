@@ -10,14 +10,13 @@ def shouldApplyFilter(channel_id, key):
 def passKeyFilter(card):
 	if matchKey(str(card), popularlist.items()):
 		return weiboo.getCount(card) > 10000
-	return weiboo.getCount(card) > 300 # 1000
+	return weiboo.getCount(card) > 1000
 
 def passMasterFilter(card):
 	if weiboo.getCount(card) < 300:
 		return False
 	for item in blocklist.items():
 		if item in str(card):
-			print('blocked', card['scheme'], item)
 			return False
 	return True
 

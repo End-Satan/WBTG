@@ -67,11 +67,8 @@ def loop():
 	loopImp()
 	threading.Timer(30, loop).start() 
 
-def test():
-	process('7020024436', method=weiboo.backfill)
-
 if __name__ == '__main__':
-	threading.Timer(1, test).start() 
+	threading.Timer(1, loop).start() 
 	setupCommand(tele.dispatcher) 
 	tele.start_polling()
 	tele.idle()
