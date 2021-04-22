@@ -68,7 +68,6 @@ def loop():
 	threading.Timer(30, loop).start() 
 
 def test():
-	process('5292140226', method=weiboo.backfill)
 	process('7020024436', method=weiboo.backfill)
 
 if __name__ == '__main__':
