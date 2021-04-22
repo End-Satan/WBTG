@@ -38,6 +38,7 @@ def process(key, method=weiboo.search):
 	if not search_result:
 		print('no search result', key)
 		return
+	print(len(search_result))
 	for url, card in search_result:
 		result = None
 		for channel in channels:
