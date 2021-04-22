@@ -17,6 +17,7 @@ def passMasterFilter(card):
 		return False
 	for item in blocklist.items():
 		if item in str(card):
+			print('blocked', card['scheme'], item)
 			return False
 	return True
 
