@@ -28,10 +28,10 @@ def getResult(url, card, channels):
 		return weibo_2_album.get(url)
 	return weibo_2_album.get(url, card['mblog'])
 
-def process(key):
+def process(key, method=weiboo.search):
 	channels = subscription.channels(tele.bot, key)
 	try:
-		search_result = weiboo.search(key, force_cache=True)
+		search_result = method(key, force_cache=True)
 	except Exception as e:
 		print('search failed', key, str(e))
 		return
@@ -69,7 +69,8 @@ def loop():
 	# threading.Timer(60 * 2, loop).start() 
 
 if __name__ == '__main__':
-	threading.Timer(1, loop).start() 
+	process('7020024436', method=weiboo.backfill)
+	# threading.Timer(1, loop).start() 
 	setupCommand(tele.dispatcher)
 	tele.start_polling()
 	tele.idle()
