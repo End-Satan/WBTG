@@ -66,12 +66,13 @@ def loopImp():
 def loop():
 	loopImp()
 	threading.Timer(30, loop).start() 
-	# threading.Timer(60 * 2, loop).start() 
+
+def test():
+	process('5292140226', method=weiboo.backfill)
+	process('7020024436', method=weiboo.backfill)
 
 if __name__ == '__main__':
-	threading.Timer(1, loop).start() 
-	setupCommand(tele.dispatcher)
-	# process('5292140226', method=weiboo.backfill)
-	# process('7020024436', method=weiboo.backfill)
+	threading.Timer(1, test).start() 
+	setupCommand(tele.dispatcher) 
 	tele.start_polling()
 	tele.idle()
