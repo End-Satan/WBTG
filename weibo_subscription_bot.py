@@ -13,6 +13,8 @@ import random
 from filter import passFilter
 import time
 
+fullfilled = set()
+
 def shouldProcess(channel, card, key):
 	if not passFilter(channel, card, key):
 		return False
@@ -48,6 +50,7 @@ def process(key, method=weiboo.search):
 				if not result:
 					result = getResult(url, card, channels)
 				result_posts = album_sender.send_v2(channel, result)
+				fullfilled.add(key)
 			except Exception as e:
 				debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
 			finally:
@@ -58,7 +61,13 @@ def process(key, method=weiboo.search):
 def loopImp():
 	removeOldFiles('tmp', day=0.1)
 	if not scheduled_key:
-		for key in subscription.subscriptions():
+		items = list(fullfilled)
+		print('weibo bot fullfilled:', items)
+		if random.random() < 0.3 or not items:
+			items = subscription.subscriptions()
+		else:
+			fullfilled.clear()
+		for key in items:
 			scheduled_key.append(key)
 		random.shuffle(scheduled_key)
 	process(scheduled_key.pop())
