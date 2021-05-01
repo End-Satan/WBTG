@@ -26,7 +26,10 @@ def getResult(url, card, channels):
 		return weibo_2_album.get(url, card['mblog'])
 	if set([channel.id for channel in channels]) & set([-1001374366482, -1001340272388, -1001427773894, -1001437951226]):
 		return weibo_2_album.get(url)
-	return weibo_2_album.get(url, card['mblog'])
+	result = weibo_2_album.get(url, card['mblog'])
+	if result.cap_html_v2.endswith('...全文'):
+		result.cap_html_v2 = result.cap_html_v2[:-5].strip()
+	return result
 
 def process(key, method=weiboo.search):
 	channels = subscription.channels(tele.bot, key)
