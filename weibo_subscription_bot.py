@@ -28,7 +28,8 @@ def getResult(url, card, channels):
 		return weibo_2_album.get(url)
 	result = weibo_2_album.get(url, card['mblog'])
 	if result.cap_html_v2.endswith('全文</a>'):
-		result.cap_html_v2 = result.cap_html_v2[:-5].strip()
+		index = result.cap_html_v2.rfind('...')
+		result.cap_html_v2 = result.cap_html_v2[:index].strip()
 	return result
 
 def process(key, method=weiboo.search):
