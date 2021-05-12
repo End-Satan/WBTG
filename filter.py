@@ -8,6 +8,8 @@ def shouldApplyFilter(channel_id, key):
 	return subscription.filterOnKey(channel_id)
 
 def passKeyFilter(card):
+	if matchKey(str(card), ['7501857819', '7436179338']): # testing
+		return True
 	if matchKey(str(card), popularlist.items()):
 		return weiboo.getCount(card) > 10000
 	return weiboo.getCount(card) > 1000
