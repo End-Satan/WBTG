@@ -72,7 +72,6 @@ def loop():
 	threading.Timer(30, loop).start() 
 
 def backfill():
-	process('7501857819', weiboo.backfill)
 	process('7436179338', weiboo.backfill)
 
 if __name__ == '__main__':
