@@ -75,7 +75,7 @@ def backfill():
 	process('7436179338', weiboo.backfill)
 
 if __name__ == '__main__':
-	threading.Timer(1, backfill).start() 
+	threading.Timer(1, loop).start() 
 	setupCommand(tele.dispatcher) 
 	tele.start_polling()
 	tele.idle()
