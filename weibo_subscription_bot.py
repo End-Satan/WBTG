@@ -25,14 +25,9 @@ def getResult(url, card, channels):
 	result = weibo_2_album.get(url, card['mblog'])
 	if '全文</a>' not in str(card['mblog']):
 		return result
-	if set([channel.id for channel in channels]) & set([-1001374366482, -1001340272388, -1001427773894, -1001437951226]):
-		full_result = weibo_2_album.get(url)
-		if full_result.cap_html_v2:
-			result.cap_html_v2 = full_result.cap_html_v2
-		return result
-	if result.cap_html_v2.endswith('全文</a>'):
-		index = result.cap_html_v2.rfind('...')
-		result.cap_html_v2 = result.cap_html_v2[:index].strip()
+	full_result = weibo_2_album.get(url)
+	if full_result.cap_html_v2:
+		result.cap_html_v2 = full_result.cap_html_v2
 	return result
 
 def process(key, method=weiboo.search):
