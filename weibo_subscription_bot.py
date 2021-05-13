@@ -35,13 +35,13 @@ def log(url, card, key, channels):
 	whash = weiboo.getHash(card)
 	if not log_existing.add(whash):
 		return
-	message_1 = 'key: %s %s content: %s <a href="%s">source</a>' % (
-		key, getChannelsLog(channels), weibo_2_album.getCap(card['mblog']), url)
+	message_1 = 'key: %s channel_id: %s content: %s <a href="%s">source</a>' % (
+		key, ' '.join([str(channel.id) for channel in channels]), 
+		weibo_2_album.getCap(card['mblog']), url)
 	logger.send_message(message_1, parse_mode='html', disable_web_page_preview=True)
 	time.sleep(5)
-	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
-	if additional_info:
-		logger.send_message(additional_info, parse_mode='html', disable_web_page_preview=True)
+	additional_info = getChannelsLog(channels) + ' ' + weibo_2_album.getAdditionalInfo(card['mblog'])
+	logger.send_message(additional_info, parse_mode='html', disable_web_page_preview=True)
 	time.sleep(5)
 
 def process(key, method=weiboo.search):
