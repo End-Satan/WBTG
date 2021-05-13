@@ -22,11 +22,14 @@ def shouldProcess(channel, card, key):
 	return True
 
 def getResult(url, card, channels):
-	if '全文</a>' not in str(card['mblog']):
-		return weibo_2_album.get(url, card['mblog'])
-	if set([channel.id for channel in channels]) & set([-1001374366482, -1001340272388, -1001427773894, -1001437951226]):
-		return weibo_2_album.get(url)
 	result = weibo_2_album.get(url, card['mblog'])
+	if '全文</a>' not in str(card['mblog']):
+		return result
+	if set([channel.id for channel in channels]) & set([-1001374366482, -1001340272388, -1001427773894, -1001437951226]):
+		full_result = weibo_2_album.get(url)
+		if full_result.cap_html_v2:
+			result.cap_html_v2 = full_result.cap_html_v2
+		return result
 	if result.cap_html_v2.endswith('全文</a>'):
 		index = result.cap_html_v2.rfind('...')
 		result.cap_html_v2 = result.cap_html_v2[:index].strip()
@@ -72,7 +75,8 @@ def loop():
 	threading.Timer(30, loop).start() 
 
 def backfill():
-	process('7436179338', weiboo.backfill)
+	process('5807402211', weiboo.backfill)
+	process('1357494880', weiboo.backfill)
 
 if __name__ == '__main__':
 	threading.Timer(1, loop).start() 
