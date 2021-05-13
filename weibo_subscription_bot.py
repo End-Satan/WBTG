@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from telegram_util import log_on_fail, removeOldFiles, getLogStr, isInt
+from telegram_util import log_on_fail, removeOldFiles, getLogStr, isInt, getChannelsLog
 import album_sender
 from db import subscription, existing, scheduled_key
 import threading
@@ -31,11 +31,13 @@ def getResult(url, card, channels):
 	return result
 
 def log(url, card, key, channels):
-	channels_info = []
-	message_1 = 'key: %s channels: %s content: %s <a href="%s">source</a>' % (
-		key, channels_info, weibo_2_album.getCap(card['mblog']), url)
-	logger.send_message(message_1, parse_mode='html')
-	cap = weibo_2_album.getCap(card['mblog'])
+	message_1 = 'key: %s %s content: %s <a href="%s">source</a>' % (
+		key, getChannelsLog(channels), weibo_2_album.getCap(card['mblog']), url)
+	logger.send_message(message_1, parse_mode='html', disable_web_page_preview=True)
+	print(card) # see what need to be included in additional info
+	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
+	if additional_info:
+		logger.send_message(additional_info)
 
 def process(key, method=weiboo.search):
 	channels = subscription.channels(tele.bot, key)
