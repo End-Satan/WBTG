@@ -7,7 +7,7 @@ from db import subscription, existing, scheduled_key
 import threading
 import weibo_2_album
 from command import setupCommand
-from common import debug_group, tele
+from common import debug_group, tele, logger
 import weiboo
 import random
 from filter import passFilter
@@ -30,6 +30,13 @@ def getResult(url, card, channels):
 		result.cap_html_v2 = full_result.cap_html_v2
 	return result
 
+def log(url, card, key, channels):
+	channels_info = []
+	message_1 = 'key: %s channels: %s content: %s <a href="%s">source</a>' % (
+		key, channels_info, weibo_2_album.getCap(card['mblog']), url)
+	logger.send_message(message_1, parse_mode='html')
+	cap = weibo_2_album.getCap(card['mblog'])
+
 def process(key, method=weiboo.search):
 	channels = subscription.channels(tele.bot, key)
 	try:
@@ -41,7 +48,7 @@ def process(key, method=weiboo.search):
 		print('no search result', key)
 		return
 	for url, card in search_result:
-		weibo_2_album.getLog(url, card['mblog'])
+		log(url, card, key, channels) # see if need any filter
 		result = None
 		for channel in channels:
 			if not shouldProcess(channel, card, key):
