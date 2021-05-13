@@ -37,7 +37,7 @@ def log(url, card, key, channels):
 	print(card) # see what need to be included in additional info
 	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
 	if additional_info:
-		logger.send_message(additional_info)
+		logger.send_message(additional_info, parse_mode='html', disable_web_page_preview=True)
 
 def process(key, method=weiboo.search):
 	channels = subscription.channels(tele.bot, key)
