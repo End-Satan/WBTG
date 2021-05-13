@@ -41,6 +41,7 @@ def process(key, method=weiboo.search):
 		print('no search result', key)
 		return
 	for url, card in search_result:
+		weibo_2_album.getLog(url, card['mblog'])
 		result = None
 		for channel in channels:
 			if not shouldProcess(channel, card, key):
