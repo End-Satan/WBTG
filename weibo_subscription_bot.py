@@ -3,7 +3,7 @@
 
 from telegram_util import log_on_fail, removeOldFiles, getLogStr, isInt, getChannelsLog
 import album_sender
-from db import subscription, existing, scheduled_key
+from db import subscription, existing, scheduled_key, log_existing
 import threading
 import weibo_2_album
 from command import setupCommand
@@ -12,6 +12,7 @@ import weiboo
 import random
 from filter import passFilter
 import time
+import plain_db
 
 def shouldProcess(channel, card, key):
 	if not passFilter(channel, card, key):
@@ -31,13 +32,17 @@ def getResult(url, card, channels):
 	return result
 
 def log(url, card, key, channels):
+	whash = weiboo.getHash(card)
+	if not log_existing.add(whash):
+		return
 	message_1 = 'key: %s %s content: %s <a href="%s">source</a>' % (
 		key, getChannelsLog(channels), weibo_2_album.getCap(card['mblog']), url)
 	logger.send_message(message_1, parse_mode='html', disable_web_page_preview=True)
-	print(card) # see what need to be included in additional info
+	time.sleep(5)
 	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
 	if additional_info:
 		logger.send_message(additional_info, parse_mode='html', disable_web_page_preview=True)
+	time.sleep(5)
 
 def process(key, method=weiboo.search):
 	channels = subscription.channels(tele.bot, key)

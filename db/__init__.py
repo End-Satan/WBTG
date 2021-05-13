@@ -6,6 +6,7 @@ import weiboo
 existing = plain_db.loadKeyOnlyDB('existing')
 blocklist = plain_db.loadKeyOnlyDB('blocklist')
 popularlist = plain_db.loadKeyOnlyDB('popularlist')
+log_existing = plain_db.loadKeyOnlyDB('log_existing')
 weibo_name = plain_db.load('weibo_name', isIntValue=False)
 scheduled_key = []
 
