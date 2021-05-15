@@ -31,7 +31,7 @@ def getResult(url, card, channels):
 		result.cap_html_v2 = full_result.cap_html_v2
 	return result
 
-# @log_on_fail(debug_group) # testing
+@log_on_fail(debug_group)
 def log(url, card, key, channels, sent):
 	whash = weiboo.getHash(card)
 	if not log_existing.add(whash):
