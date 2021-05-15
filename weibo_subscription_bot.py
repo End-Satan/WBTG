@@ -31,7 +31,7 @@ def getResult(url, card, channels):
 		result.cap_html_v2 = full_result.cap_html_v2
 	return result
 
-@log_on_fail(debug_group)
+# @log_on_fail(debug_group) # testing
 def log(url, card, key, channels, sent):
 	whash = weiboo.getHash(card)
 	if not log_existing.add(whash):
@@ -39,13 +39,25 @@ def log(url, card, key, channels, sent):
 	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
 	if additional_info:
 		additional_info += ' '
-	message_1 = '%s <a href="%s">source</a>\n\nkey: %s channel_id: %s %s' % (
-		weibo_2_album.getCap(card['mblog']), url,
+	if sent:
+		sent = ' weibo_bot_sent'
+	else:
+		sent = ''
+	if set([channel.id for channel in channels]) & set([-1001496977825, -1001374366482, -1001340272388, -1001326932731]):
+		mark = ''
+	else:
+		mark = ' weibo_channel_ignore'
+	message = '%s\n\n%skey: %s channel_id: %s %s%s%s <a href="%s">source</a>' % (
+		weibo_2_album.getCap(card['mblog']),
 		additional_info,
 		key, ' '.join([str(channel.id) for channel in channels]), 
-		getChannelsLog(channels))
-	logger.send_message(message_1, parse_mode='html', disable_web_page_preview=(not additional_info))
-	time.sleep(5)
+		getChannelsLog(channels), sent, mark, url)
+	try:
+		logger.send_message(message, parse_mode='html', disable_web_page_preview=(not additional_info))
+		time.sleep(5)
+	except:
+		print('log failed', message)
+	
 
 def process(key, method=weiboo.search):
 	channels = subscription.channels(tele.bot, key)
