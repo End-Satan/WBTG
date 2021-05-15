@@ -39,7 +39,7 @@ def log(url, card, key, channels, sent):
 	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
 	if additional_info:
 		additional_info += ' '
-	disable_web_page_preview = matchKey(additional_info, ['imgs:', 'video:'])
+	disable_web_page_preview = not matchKey(additional_info, ['imgs:', 'video:'])
 	if sent:
 		sent = ' weibo_bot_sent'
 	else:
