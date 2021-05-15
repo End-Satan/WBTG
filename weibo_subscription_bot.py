@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from telegram_util import log_on_fail, removeOldFiles, getLogStr, isInt, getChannelsLog
+from telegram_util import log_on_fail, removeOldFiles, getLogStr, isInt, getChannelsLog, matchKey
 import album_sender
 from db import subscription, existing, scheduled_key, log_existing
 import threading
