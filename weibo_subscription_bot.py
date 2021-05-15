@@ -31,17 +31,20 @@ def getResult(url, card, channels):
 		result.cap_html_v2 = full_result.cap_html_v2
 	return result
 
-def log(url, card, key, channels):
+@log_on_fail(debug_group)
+def log(url, card, key, channels, sent):
 	whash = weiboo.getHash(card)
 	if not log_existing.add(whash):
 		return
-	message_1 = 'key: %s channel_id: %s content: %s <a href="%s">source</a>' % (
+	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
+	if additional_info:
+		additional_info += ' '
+	message_1 = '%s <a href="%s">source</a>\n\nkey: %s channel_id: %s %s' % (
+		weibo_2_album.getCap(card['mblog']), url,
+		additional_info,
 		key, ' '.join([str(channel.id) for channel in channels]), 
-		weibo_2_album.getCap(card['mblog']), url)
-	logger.send_message(message_1, parse_mode='html', disable_web_page_preview=True)
-	time.sleep(5)
-	additional_info = getChannelsLog(channels) + ' ' + weibo_2_album.getAdditionalInfo(card['mblog'])
-	logger.send_message(additional_info, parse_mode='html', disable_web_page_preview=True)
+		getChannelsLog(channels))
+	logger.send_message(message_1, parse_mode='html', disable_web_page_preview=(not additional_info))
 	time.sleep(5)
 
 def process(key, method=weiboo.search):
@@ -55,7 +58,6 @@ def process(key, method=weiboo.search):
 		print('no search result', key)
 		return
 	for url, card in search_result:
-		log(url, card, key, channels) # see if need any filter
 		result = None
 		for channel in channels:
 			if not shouldProcess(channel, card, key):
@@ -70,6 +72,7 @@ def process(key, method=weiboo.search):
 			finally:
 				post_len = len(result_posts or [])
 				time.sleep((post_len ** 2) / 2 + post_len * 10)
+		log(url, card, key, channels, result)
 
 @log_on_fail(debug_group)
 def loopImp():
