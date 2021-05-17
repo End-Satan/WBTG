@@ -33,6 +33,8 @@ def getResult(url, card, channels):
 
 @log_on_fail(debug_group)
 def log(url, card, key, channels, sent):
+	if weiboo.getCount(card) < 20:
+		return
 	whash = weiboo.getHash(card)
 	if not log_existing.add(whash):
 		return
