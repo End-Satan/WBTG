@@ -48,11 +48,11 @@ def log(url, card, key, channels, sent):
 		mark = ''
 	else:
 		mark = ' weibo_channel_ignore'
-	message = '%s\n\n%skey: %s channel_id: %s %s%s%s <a href="%s">source</a>' % (
+	message = '%s\n\n%skey: %s channel_id: %s %s%s%s %s <a href="%s">source</a>' % (
 		weibo_2_album.getCap(card['mblog']),
 		additional_info,
 		key, ' '.join([str(channel.id) for channel in channels]), 
-		getChannelsLog(channels), sent, mark, url)
+		getChannelsLog(channels), sent, mark, url, url)
 	try:
 		logger.send_message(message, parse_mode='html', disable_web_page_preview=disable_web_page_preview)
 		time.sleep(5)
