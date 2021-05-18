@@ -108,12 +108,8 @@ def backfill():
 	process('5807402211', weiboo.backfill)
 	process('1357494880', weiboo.backfill)
 
-def test():
-	for channel_id in core_channels_ids:
-			
-
 if __name__ == '__main__':
-	threading.Timer(1, test).start() 
+	threading.Timer(1, loop).start() 
 	setupCommand(tele.dispatcher) 
 	tele.start_polling()
 	tele.idle()
