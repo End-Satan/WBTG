@@ -4,8 +4,12 @@ import time
 import cached_url
 import yaml
 import random
+import plain_db
+import os
 
-DAYS = 60
+blocklist = plain_db.loadKeyOnlyDB('blocklist')
+
+DAYS = 365
 channels = [
 	'daily_feminist',
 	'freedom_watch',
@@ -31,6 +35,9 @@ def process(status):
 wb_prefix = 'https://m.weibo.cn/statuses/show?id='
 def getJson(link):
 	wid = getWid(link)
+	url = wb_prefix + wid
+	if not os.path.exists(cached_url.getFilePath(url)):
+		return {}
 	try:
 		json = yaml.load(cached_url.get(wb_prefix + wid, force_cache=True, sleep=5), Loader=yaml.FullLoader)
 		json['data']['user']
@@ -55,9 +62,9 @@ def getWeiboLinks():
 def run():
 	process_count = 0
 	for link in getWeiboLinks():
-		if random.random() < 0.8:
-			continue
 		status = getJson(link)
+		if matchKey(str(status), blocklist.items()):
+			continue
 		process(status)
 		process(status.get('retweeted_status', {}))
 		process_count += 1
@@ -66,7 +73,7 @@ def run():
 	count = [(item[1], item[0]) for item in freq_count.items()]
 	count.sort(reverse=True)
 	print(count)
-	ids = [item[1] for item in count]
+	ids = [item[1] for item in count if item[0] > 2]
 	for user_id in ids:
 		print('【%s】\n%s\nhttps://m.weibo.cn/u/%d\n' % (name.get(user_id), description.get(user_id), user_id))
 
