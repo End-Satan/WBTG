@@ -93,7 +93,7 @@ def process(key, method=weiboo.search):
 
 @log_on_fail(debug_group)
 def loopImp():
-	# removeOldFiles('tmp', day=0.1)
+	removeOldFiles('tmp', day=0.1)
 	if not scheduled_key:
 		for key in subscription.subscriptions():
 			scheduled_key.append(key)
@@ -109,7 +109,7 @@ def backfill():
 	process('1357494880', weiboo.backfill)
 
 if __name__ == '__main__':
-	threading.Timer(1, loop).start() 
+	# threading.Timer(1, loop).start() 
 	setupCommand(tele.dispatcher) 
 	tele.start_polling()
 	tele.idle()

@@ -4,7 +4,7 @@ import time
 import cached_url
 import yaml
 
-DAYS = 1 # 365
+DAYS = 365
 channels = [
 	'daily_feminist',
 	'freedom_watch',
@@ -24,7 +24,7 @@ def process(status):
 	if not user_id:
 		return
 	name[user_id] = user.get('screen_name')
-	description[user_id] = user.get('description')
+	description[user_id] = user.get('description').encode('utf-16', 'surrogatepass').decode('utf-16')
 	freq_count[user_id] = freq_count.get(user_id, 0) + 1
 
 wb_prefix = 'https://m.weibo.cn/statuses/show?id='
@@ -32,8 +32,10 @@ def getJson(link):
 	wid = getWid(link)
 	try:
 		json = yaml.load(cached_url.get(wb_prefix + wid, force_cache=True, sleep=5), Loader=yaml.FullLoader)
+		json['data']['user']
 		return json['data']
 	except:
+		print('fetch failed: ' + link)
 		return {}
 
 def getWeiboLinks():
