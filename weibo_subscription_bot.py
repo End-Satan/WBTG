@@ -14,6 +14,8 @@ from filter import passFilter
 import time
 import plain_db
 
+core_channels_ids = set([-1001496977825, -1001374366482, -1001340272388, -1001326932731])
+
 def shouldProcess(channel, card, key):
 	if not passFilter(channel, card, key):
 		return False
@@ -46,7 +48,7 @@ def log(url, card, key, channels, sent):
 		sent = ' weibo_bot_sent'
 	else:
 		sent = ''
-	if set([channel.id for channel in channels]) & set([-1001496977825, -1001374366482, -1001340272388, -1001326932731]):
+	if set([channel.id for channel in channels]) & core_channels_ids:
 		mark = ''
 	else:
 		mark = ' weibo_channel_ignore'
@@ -106,8 +108,12 @@ def backfill():
 	process('5807402211', weiboo.backfill)
 	process('1357494880', weiboo.backfill)
 
+def test():
+	for channel_id in core_channels_ids:
+			
+
 if __name__ == '__main__':
-	threading.Timer(1, loop).start() 
+	threading.Timer(1, test).start() 
 	setupCommand(tele.dispatcher) 
 	tele.start_polling()
 	tele.idle()
