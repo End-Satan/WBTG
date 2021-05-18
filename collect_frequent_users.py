@@ -4,7 +4,7 @@ import time
 import cached_url
 import yaml
 
-DAYS = 365
+DAYS = 180
 channels = [
 	'daily_feminist',
 	'freedom_watch',
