@@ -93,7 +93,7 @@ def process(key, method=weiboo.search):
 
 @log_on_fail(debug_group)
 def loopImp():
-	removeOldFiles('tmp', day=0.1)
+	# removeOldFiles('tmp', day=0.1)
 	if not scheduled_key:
 		for key in subscription.subscriptions():
 			scheduled_key.append(key)

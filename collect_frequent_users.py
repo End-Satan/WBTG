@@ -12,15 +12,29 @@ channels = [
 	'life_with_disabilities',
 	'labor_one']
 
+freq_count = {}
+name = {}
+description = {}
+
+def process(status):
+	user = status.get('user')
+	if not user:
+		return
+	user_id = user.get('id')
+	if not user_id:
+		return
+	name[user_id] = user.get('screen_name')
+	description[user_id] = user.get('description')
+	freq_count[user_id] = freq_count.get(user_id, 0) + 1
+
 wb_prefix = 'https://m.weibo.cn/statuses/show?id='
 def getJson(link):
 	wid = getWid(link)
 	try:
-		time.sleep(5)
-		json = yaml.load(cached_url.get(wb_prefix + wid, force_cache=True), Loader=yaml.FullLoader)
+		json = yaml.load(cached_url.get(wb_prefix + wid, force_cache=True, sleep=5), Loader=yaml.FullLoader)
 		return json['data']
 	except:
-		return
+		return {}
 
 def getWeiboLinks():
 	existing = set()
@@ -37,11 +51,15 @@ def getWeiboLinks():
 
 def run():
 	for link in getWeiboLinks():
-		print(link)
 		status = getJson(link)
-		if not status:
-			continue
-		
+		process(status)
+		process(status.get('retweeted_status', {}))
+	count = [(item[1], item[0]) for item in freq_count.items()]
+	count.sort(reverse=True)
+	print(count)
+	ids = [item[1] for item in count]
+	for user_id in ids:
+		print('【%s】\n%s\nhttps://m.weibo.cn/u/%d\n' % (name.get(user_id), description.get(user_id), user_id))
 
 if __name__ == '__main__':
 	run()
