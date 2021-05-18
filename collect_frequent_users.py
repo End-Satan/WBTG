@@ -1,10 +1,11 @@
 import telepost
-from telegram_util import getWid
+from telegram_util import getWid, matchKey
 import time
 import cached_url
 import yaml
+import random
 
-DAYS = 180
+DAYS = 60
 channels = [
 	'daily_feminist',
 	'freedom_watch',
@@ -52,10 +53,16 @@ def getWeiboLinks():
 						existing.add(link)
 
 def run():
+	process_count = 0
 	for link in getWeiboLinks():
+		if random.random() < 0.8:
+			continue
 		status = getJson(link)
 		process(status)
 		process(status.get('retweeted_status', {}))
+		process_count += 1
+		if process_count % 100 == 0:
+			print('process_count:', process_count)
 	count = [(item[1], item[0]) for item in freq_count.items()]
 	count.sort(reverse=True)
 	print(count)
