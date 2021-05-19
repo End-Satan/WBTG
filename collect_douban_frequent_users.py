@@ -29,9 +29,7 @@ def process(item):
 	name[uid] = name_block['title']
 
 def getSoup(link):
-	# if not os.path.exists(cached_url.getFilePath(link)):
-	# 	return {}
-	if random.random() < 0.9:
+	if not os.path.exists(cached_url.getFilePath(link)):
 		return
 	return BeautifulSoup(cached_url.get(link, sleep=1), 'html.parser')
 
