@@ -8,7 +8,7 @@ import plain_db
 import os
 from bs4 import BeautifulSoup
 
-DAYS = 30
+DAYS = 365
 channels = [
 	'daily_feminist',
 	'freedom_watch',
@@ -31,6 +31,8 @@ def process(item):
 def getSoup(link):
 	# if not os.path.exists(cached_url.getFilePath(link)):
 	# 	return {}
+	if random.random() < 0.9:
+		return
 	return BeautifulSoup(cached_url.get(link, sleep=1), 'html.parser')
 
 def getDoubanLinks():
