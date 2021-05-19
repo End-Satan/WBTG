@@ -8,7 +8,7 @@ import plain_db
 import os
 from bs4 import BeautifulSoup
 
-DAYS = 365
+DAYS = 30
 channels = [
 	'daily_feminist',
 	'freedom_watch',
@@ -18,15 +18,20 @@ channels = [
 
 freq_count = {}
 name = {}
-description = {}
 
-def process(soup):
-	...
+def process(item):
+	try:
+		uid = int(item.get('data-uid'))
+	except:
+		return
+	name_block = item.find('a', href=True, title=True)
+	freq_count[uid] = freq_count.get(uid, 0) + 1
+	name[uid] = name_block['title']
 
 def getSoup(link):
 	# if not os.path.exists(cached_url.getFilePath(link)):
 	# 	return {}
-	return BeautifulSoup(cached_url.get(link), 'html.parser', sleep=10)
+	return BeautifulSoup(cached_url.get(link, sleep=1), 'html.parser')
 
 def getDoubanLinks():
 	existing = set()
@@ -45,9 +50,11 @@ def run():
 	process_count = 0
 	for link in getDoubanLinks():
 		soup = getSoup(link)
-
-		# process(status)
-		# process(status.get('retweeted_status', {}))
+		if not soup:
+			continue
+		items = list(soup.find_all('div', class_='status-item'))
+		for item in items:
+			process(item)
 		process_count += 1
 		if process_count % 100 == 0:
 			print('process_count:', process_count)
@@ -56,7 +63,7 @@ def run():
 	print(count)
 	ids = [item[1] for item in count if item[0] > 2]
 	for user_id in ids:
-		print('【%s】\n%s\nhttps://www.douban.com/people/%d\n' % (name.get(user_id), description.get(user_id), user_id))
+		print('【%s】\nhttps://www.douban.com/people/%d\n' % (name.get(user_id), user_id))
 
 if __name__ == '__main__':
 	run()
