@@ -59,10 +59,9 @@ def log(url, card, key, channels, sent):
 		getChannelsLog(channels), sent, mark, url, url)
 	try:
 		logger.send_message(message, parse_mode='html', disable_web_page_preview=disable_web_page_preview)
-		time.sleep(5)
-	except:
-		print('log failed', message)
-	
+	except Exception as e:
+		print('log failed', str(e), message)
+	time.sleep(5)	
 
 def process(key, method=weiboo.search):
 	channels = subscription.channels(tele.bot, key)
