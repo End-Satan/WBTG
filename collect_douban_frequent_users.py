@@ -28,6 +28,14 @@ def process(item):
 	freq_count[uid] = freq_count.get(uid, 0) + 1
 	name[uid] = name_block['title']
 
+def processNote(item):
+	author = item.find('a', class_='note-author')
+	if not author:
+		return
+	uid = author['href'].split('/')[-2]
+	name[uid] = author.text
+	freq_count[uid] = freq_count.get(uid, 0) + 1
+
 def getSoup(link):
 	if not os.path.exists(cached_url.getFilePath(link)):
 		return
@@ -49,10 +57,10 @@ def getDoubanLinks():
 def run():
 	process_count = 0
 	for link in getDoubanLinks():
-		print(link)
 		soup = getSoup(link)
 		if not soup:
 			continue
+		processNote(soup)
 		process_count += 1
 		if process_count % 100 == 0:
 			print('process_count:', process_count)
@@ -61,7 +69,7 @@ def run():
 	print(count)
 	ids = [item[1] for item in count if item[0] > 2]
 	for user_id in ids:
-		print('【%s】\nhttps://www.douban.com/people/%d\n' % (name.get(user_id), user_id))
+		print('【%s】\nhttps://www.douban.com/people/%s\n' % (name.get(user_id), user_id))
 
 if __name__ == '__main__':
 	run()
