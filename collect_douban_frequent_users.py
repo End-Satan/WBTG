@@ -40,7 +40,7 @@ def getDoubanLinks():
 			if not post.text:
 				continue
 			for item in post.text.find_all('a', href=True):
-				if 'douban.' in item['href']:
+				if 'douban.' in item['href'] and 'note' in item['href']:
 					link = item['href']
 					if link not in existing:
 						yield link
@@ -49,12 +49,10 @@ def getDoubanLinks():
 def run():
 	process_count = 0
 	for link in getDoubanLinks():
+		print(link)
 		soup = getSoup(link)
 		if not soup:
 			continue
-		items = list(soup.find_all('div', class_='status-item'))
-		for item in items:
-			process(item)
 		process_count += 1
 		if process_count % 100 == 0:
 			print('process_count:', process_count)
