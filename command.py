@@ -3,9 +3,11 @@ from telegram_util import log_on_fail, splitCommand, commitRepo, tryDelete, auto
 from common import debug_group
 from db import subscription, blocklist, popularlist, scheduled_key
 
+core_channels_ids = set([-1001496977825, -1001374366482, -1001340272388, -1001326932731, -1001598520359])
+
 @log_on_fail(debug_group)
 def handleAdmin(msg):
-	if msg.chat.username not in ['weibo_read', 'weibo_one', 'english_bilingual']:
+	if msg.chat.id not in core_channels_ids:
 		return
 	command, text = splitCommand(msg.text)
 	if not text:

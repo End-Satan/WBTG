@@ -6,14 +6,12 @@ import album_sender
 from db import subscription, existing, scheduled_key, log_existing, keywords, blocklist
 import threading
 import weibo_2_album
-from command import setupCommand
+from command import setupCommand, core_channels_ids
 from common import debug_group, tele, logger
 import weiboo
 import random
 from filter import passFilter
 import time
-
-core_channels_ids = set([-1001496977825, -1001374366482, -1001340272388, -1001326932731, -1001598520359])
 
 def shouldProcess(channel, card, key):
 	if not passFilter(channel, card, key):
