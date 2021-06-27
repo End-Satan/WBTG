@@ -114,6 +114,7 @@ def process(key, method=weiboo.search):
 def loopImp():
 	# removeOldFiles('tmp', day=0.1)
 	if not scheduled_key:
+		print('~~~scheduling~~')
 		for key in subscription.subscriptions():
 			scheduled_key.append(key)
 		random.shuffle(scheduled_key)
