@@ -3,7 +3,7 @@
 
 from telegram_util import log_on_fail, removeOldFiles, getLogStr, isInt, getChannelsLog, matchKey
 import album_sender
-from db import subscription, existing, scheduled_key, log_existing
+from db import subscription, existing, scheduled_key, log_existing, keywords, blocklist
 import threading
 import weibo_2_album
 from command import setupCommand
@@ -12,9 +12,8 @@ import weiboo
 import random
 from filter import passFilter
 import time
-import plain_db
 
-core_channels_ids = set([-1001496977825, -1001374366482, -1001340272388, -1001326932731])
+core_channels_ids = set([-1001496977825, -1001374366482, -1001340272388, -1001326932731, -1001598520359])
 
 def shouldProcess(channel, card, key):
 	if not passFilter(channel, card, key):
@@ -33,11 +32,32 @@ def getResult(url, card, channels):
 		result.cap_html_v2 = full_result.cap_html_v2
 	return result
 
+def tryExtendSubscription(key, channels, card):
+	if not isInt(key):
+		return
+	core_card = card.get('mblog', {}).get('retweeted_status')
+	if not core_card:
+		return
+	if matchKey(str(card), [str(item) for item in blocklist.items()]):
+		return
+	if not (set([channel.id for channel in channels]) & core_channels_ids):
+		return 
+	user_id = core_card.get('user', {}).get('id')
+	if not user_id:
+		return
+	print('trying to add new user_id', user_id)
+	for chat_id in core_channels_ids:
+		if str(user_id) in subscription.sub.get(chat_id, []):
+			return
+	print('adding new user_id', user_id)
+	subscription.add(-1001598520359, str(user_id))
+
 @log_on_fail(debug_group)
 def log(url, card, key, channels, sent):
 	if weiboo.getCount(card) < 20:
 		return
 	whash = weiboo.getHash(card)
+	tryExtendSubscription(key, channels, card)
 	if not log_existing.add(whash):
 		return
 	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
@@ -92,7 +112,7 @@ def process(key, method=weiboo.search):
 
 @log_on_fail(debug_group)
 def loopImp():
-	removeOldFiles('tmp', day=0.1)
+	# removeOldFiles('tmp', day=0.1)
 	if not scheduled_key:
 		for key in subscription.subscriptions():
 			scheduled_key.append(key)
@@ -101,7 +121,7 @@ def loopImp():
 		
 def loop():
 	loopImp()
-	threading.Timer(30, loop).start() 
+	threading.Timer(1, loop).start() 
 
 def backfill():
 	process('5807402211', weiboo.backfill)
