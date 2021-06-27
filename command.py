@@ -7,7 +7,6 @@ core_channels_ids = set([-1001496977825, -1001374366482, -1001340272388, -100132
 
 @log_on_fail(debug_group)
 def handleAdmin(msg):
-	print(msg.chat.id)
 	if msg.chat.id not in core_channels_ids:
 		return
 	command, text = splitCommand(msg.text)
