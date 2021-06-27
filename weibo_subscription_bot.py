@@ -44,11 +44,9 @@ def tryExtendSubscription(key, channels, card):
 	user_id = (core_card.get('user') or {}).get('id')
 	if not user_id:
 		return
-	print('trying to add new user_id', user_id)
 	for chat_id in core_channels_ids:
 		if str(user_id) in subscription.sub.get(chat_id, []):
 			return
-	print('adding new user_id', user_id)
 	subscription.add(-1001598520359, str(user_id))
 
 @log_on_fail(debug_group)
@@ -111,9 +109,8 @@ def process(key, method=weiboo.search):
 
 @log_on_fail(debug_group)
 def loopImp():
-	# removeOldFiles('tmp', day=0.1)
+	removeOldFiles('tmp', day=0.5)
 	if not scheduled_key:
-		print('~~~scheduling~~')
 		for key in subscription.subscriptions():
 			scheduled_key.append(key)
 		random.shuffle(scheduled_key)
@@ -121,7 +118,7 @@ def loopImp():
 		
 def loop():
 	loopImp()
-	threading.Timer(1, loop).start() 
+	threading.Timer(20, loop).start() 
 
 def backfill():
 	process('5807402211', weiboo.backfill)
