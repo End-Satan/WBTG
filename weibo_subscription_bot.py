@@ -13,6 +13,8 @@ import random
 from filter import passFilter
 import time
 
+auto_collect_channel_id = -1001598520359
+
 def shouldProcess(channel, card, key):
 	if not passFilter(channel, card, key):
 		return False
@@ -39,7 +41,7 @@ def tryExtendSubscription(key, channels, card):
 	if matchKey(str(card), [str(item) for item in blocklist.items()]):
 		return
 	if not (set([channel.id for channel in channels]) & 
-		(core_channels_ids - set([-1001598520359]))):
+		(core_channels_ids - set([auto_collect_channel_id]))):
 		return 
 	user_id = (core_card.get('user') or {}).get('id')
 	if not user_id:
@@ -47,16 +49,17 @@ def tryExtendSubscription(key, channels, card):
 	for chat_id in core_channels_ids:
 		if str(user_id) in subscription.sub.get(chat_id, []):
 			return
-	subscription.add(-1001598520359, str(user_id))
+	subscription.sub[auto_collect_channel_id].append(str(user_id))
+	scheduled_key.append(str(user_id))
 
 @log_on_fail(debug_group)
 def log(url, card, key, channels, sent):
 	if weiboo.getCount(card) < 20:
 		return
 	whash = weiboo.getHash(card)
-	tryExtendSubscription(key, channels, card)
 	if not log_existing.add(whash):
 		return
+	tryExtendSubscription(key, channels, card)
 	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
 	if additional_info:
 		additional_info += ' '
@@ -125,6 +128,7 @@ def backfill():
 	process('1357494880', weiboo.backfill)
 
 if __name__ == '__main__':
+	subscription.sub[auto_collect_channel_id] = ['hasMasterFilter']
 	threading.Timer(1, loop).start() 
 	setupCommand(tele.dispatcher) 
 	tele.start_polling()
