@@ -40,9 +40,10 @@ def tryExtendSubscription(key, channels, card):
 		return
 	if matchKey(str(card), [str(item) for item in blocklist.items()]):
 		return
-	if not (set([channel.id for channel in channels]) & core_channels_ids):
+	if not (set([channel.id for channel in channels]) & 
+		(core_channels_ids - set([-1001598520359]))):
 		return 
-	user_id = core_card.get('user', {}).get('id')
+	user_id = (core_card.get('user') or {}).get('id')
 	if not user_id:
 		return
 	print('trying to add new user_id', user_id)
