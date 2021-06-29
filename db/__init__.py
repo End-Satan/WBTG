@@ -70,7 +70,9 @@ class Subscription(object):
 		for key, value in self.sub.items():
 			if text in value:
 				value.remove(text)
-		for key in 
+		for key in list(self.sub.keys()):
+			if not self.sub[key]:
+				del self.sub[key]
 		self.save()
 
 	def get(self, chat_id):
