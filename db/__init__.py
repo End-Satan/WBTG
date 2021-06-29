@@ -66,6 +66,13 @@ class Subscription(object):
 				self.save()
 				return text
 
+	def remove_invalid(self, text):
+		for key, value in self.sub.items():
+			if text in value:
+				value.remove(text)
+		for key in 
+		self.save()
+
 	def get(self, chat_id):
 		result = [getDisplay(item) for item in self.sub.get(chat_id, [])]
 		result.sort()
