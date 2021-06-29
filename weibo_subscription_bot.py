@@ -94,6 +94,7 @@ def process(key, method=weiboo.search):
 		print('no search result', key)
 		return
 	for url, card in search_result:
+		print(url)
 		result = None
 		for channel in channels:
 			if not shouldProcess(channel, card, key):
