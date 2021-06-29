@@ -131,8 +131,8 @@ def backfill():
 
 if __name__ == '__main__':
 	subscription.sub[auto_collect_channel_id] = ['hasMasterFilter']
-	# threading.Timer(1, loop).start() 
-	threading.Timer(1, backfill).start() 
+	threading.Timer(1, loop).start() 
+	# threading.Timer(1, backfill).start() 
 	setupCommand(tele.dispatcher) 
 	tele.start_polling()
 	tele.idle()
