@@ -124,12 +124,14 @@ def loop():
 	threading.Timer(1, loop).start() 
 
 def backfill():
-	process('5807402211', weiboo.backfill)
-	process('1357494880', weiboo.backfill)
+	process('5402666134', weiboo.backfill)
+	print('backfill finish')
+	loop()
 
 if __name__ == '__main__':
 	subscription.sub[auto_collect_channel_id] = ['hasMasterFilter']
-	threading.Timer(1, loop).start() 
+	# threading.Timer(1, loop).start() 
+	threading.Timer(1, backfill).start() 
 	setupCommand(tele.dispatcher) 
 	tele.start_polling()
 	tele.idle()
