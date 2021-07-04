@@ -86,7 +86,7 @@ def log(url, card, key, channels, sent):
 def process(key, method=weiboo.search):
 	channels = subscription.channels(tele.bot, key)
 	try:
-		search_result = method(key, force_cache=True)
+		search_result = method(key, ttl = 5 * 50 * 60)
 	except Exception as e:
 		print('search failed', key, str(e))
 		return
@@ -112,7 +112,6 @@ def process(key, method=weiboo.search):
 
 @log_on_fail(debug_group)
 def loopImp():
-	removeOldFiles('tmp', day=0.5)
 	if not scheduled_key:
 		for key in subscription.subscriptions():
 			scheduled_key.append(key)
