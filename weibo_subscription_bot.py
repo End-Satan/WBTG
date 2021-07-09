@@ -72,6 +72,8 @@ def log(url, card, key, channels, sent):
 		mark = ''
 	else:
 		mark = ' weibo_channel_ignore'
+	if not isInt(key):
+		mark += ' weibo_string_key_ignore'
 	message = '%s\n\n%skey: %s channel_id: %s %s%s%s %s <a href="%s">source</a>' % (
 		weibo_2_album.getCap(card['mblog']),
 		additional_info,
