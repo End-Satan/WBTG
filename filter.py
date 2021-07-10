@@ -30,6 +30,8 @@ def passMasterFilter(card):
 
 def passFilter(channel, card, key):
 	channel_id = channel.id
+	if subscription.hasNoSendFilter(channel_id): # random_weibo
+		return False
 	if (shouldApplyFilter(channel_id, key) and 
 		not passKeyFilter(card)):
 		return False

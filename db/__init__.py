@@ -110,6 +110,9 @@ class Subscription(object):
 	def hasMasterFilter(self, chat_id):
 		return 'hasMasterFilter' in self.sub.get(chat_id, [])
 
+	def hasNoSendFilter(self, chat_id):
+		return 'noSendFilter' in self.sub.get(chat_id, [])
+		
 	def save(self):
 		with open('db/subscription', 'w') as f:
 			f.write(yaml.dump(self.sub, sort_keys=True, indent=2, allow_unicode=True))
