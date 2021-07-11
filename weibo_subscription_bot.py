@@ -122,7 +122,7 @@ def loopImp():
 		
 def loop():
 	loopImp()
-	threading.Timer(1, loop).start() 
+	# threading.Timer(1, loop).start() 
 
 def backfill():
 	process('5402666134', weiboo.backfill)
