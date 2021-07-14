@@ -10,7 +10,7 @@ from command import setupCommand, core_channels_ids
 from common import debug_group, tele, logger
 import weiboo
 import random
-from filter import passFilter
+from filter import passFilter, shouldProcessResult
 import time
 
 auto_collect_channel_id = -1001598520359
@@ -64,14 +64,14 @@ def log(url, card, key, channels, sent):
 	if additional_info:
 		additional_info += ' '
 	disable_web_page_preview = not matchKey(additional_info, ['imgs:', 'video:'])
-	if sent:
-		sent = ' weibo_bot_sent'
-	else:
-		sent = ''
 	if set([channel.id for channel in channels]) & core_channels_ids:
 		mark = ''
 	else:
 		mark = ' weibo_channel_ignore'
+	if set([channel.id for channel in sent]) & core_channels_ids:
+		sent = ' weibo_bot_sent' # means sent to core channel
+	else:
+		sent = ''
 	if not isInt(key):
 		mark += ' weibo_string_key_ignore'
 	message = '%s\n\n%skey: %s channel_id: %s %s%s%s %s <a href="%s">source</a>' % (
@@ -97,20 +97,21 @@ def process(key, method=weiboo.search):
 		return
 	for url, card in search_result:
 		result = None
+		sent_channels = []
 		for channel in channels:
 			if not shouldProcess(channel, card, key):
 				continue
-			result_posts = []
 			try:
 				if not result:
 					result = getResult(url, card, channels)
-				result_posts = album_sender.send_v2(channel, result)
+				if not shouldProcessResult(channel, result):
+					print('skipped', url)
+					continue
+				album_sender.send_v2(channel, result)
+				sent_channels.append(channel)
 			except Exception as e:
 				debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
-			finally:
-				post_len = len(result_posts or [])
-				time.sleep((post_len ** 2) / 2 + post_len * 10)
-		log(url, card, key, channels, result)
+		log(url, card, key, channels, sent_channels)
 
 @log_on_fail(debug_group)
 def loopImp():

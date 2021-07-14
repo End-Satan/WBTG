@@ -20,11 +20,14 @@ def passMasterFilter(card):
 	for item in blocklist.items():
 		if item in str(card):
 			return False
-	if card.get('mblog', {}).get('retweeted_status'):
+	return True
+
+def shouldProcessResult(channel, result):
+	if not subscription.hasMasterFilter(channel.id):
 		return True
-	if len(card.get('mblog', {}).get('text', '')) <= 20:
-		print('debug filtered', card)
-	return len(card.get('mblog', {}).get('text', '')) > 20
+	if result.imgs or result.video:
+		return True
+	return len(result.cap_html_v2) > 20
 
 # def tooOld(card):
 # 	created_at = card['mblog']['created_at']
