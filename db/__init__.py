@@ -112,6 +112,9 @@ class Subscription(object):
 
 	def hasNoSendFilter(self, chat_id):
 		return 'noSendFilter' in self.sub.get(chat_id, [])
+
+	def hasVideoOnlyFiler(self, chat_id):
+		return 'videoOnlyFilter' in self.sub.get(chat_id, [])
 		
 	def save(self):
 		with open('db/subscription', 'w') as f:

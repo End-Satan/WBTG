@@ -23,6 +23,8 @@ def passMasterFilter(card):
 	return True
 
 def shouldProcessResult(channel, result):
+	if subscription.hasVideoOnlyFiler(channel.id):
+		return result.video
 	if not subscription.hasMasterFilter(channel.id):
 		return True
 	if result.imgs or result.video:
