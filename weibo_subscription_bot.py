@@ -105,7 +105,6 @@ def process(key, method=weiboo.search):
 				if not result:
 					result = getResult(url, card, channels)
 				if not shouldProcessResult(channel, result):
-					print('skipped', url)
 					continue
 				album_sender.send_v2(channel, result)
 				sent_channels.append(channel)
