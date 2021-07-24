@@ -14,7 +14,7 @@ from filter import passFilter, shouldProcessResult, shouldSendMutalHelp, passBas
 import time
 
 auto_collect_channel_id = -1001598520359
-mutual_help_channel = bot.get_chat(-1001570955777)
+mutual_help_channel = tele.bot.get_chat(-1001570955777)
 
 def shouldProcess(channel, card, key):
 	if not passFilter(channel, card, key):

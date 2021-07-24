@@ -17,10 +17,19 @@ def passKeyFilter(card):
 def passMasterFilter(card):
 	if weiboo.getCount(card) < 300:
 		return False
+	# TODO: change this to matchKey
 	for item in blocklist.items():
 		if item in str(card):
 			return False
 	return True
+
+def shouldSendMutalHelp(card):
+	if matchKey(str(card), blocklist.items()):
+		return False
+	# TODO: save keyword in a list, and support command add
+	if matchKey(str(card), ['互助', '求助', '请大家', '帮帮', '救援']):
+		return True
+	return False
 
 def passBasicFilter(result):
 	if result.imgs or result.video:

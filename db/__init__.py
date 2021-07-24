@@ -111,8 +111,8 @@ class Subscription(object):
 	def hasMasterFilter(self, chat_id):
 		return 'hasMasterFilter' in self.sub.get(chat_id, [])
 
-	def hasMasterFilter(self, chat_id):
-		return 'hasMasterFilter' in self.sub.get(chat_id, [])
+	def hasBasicFilter(self, chat_id):
+		return set(['hasMasterFilter', 'hasBasicFilter']) & set(self.sub.get(chat_id, []))
 
 	def hasNoSendFilter(self, chat_id):
 		return 'noSendFilter' in self.sub.get(chat_id, [])
