@@ -3,14 +3,14 @@
 
 from telegram_util import log_on_fail, removeOldFiles, getLogStr, isInt, getChannelsLog, matchKey
 import album_sender
-from db import subscription, existing, scheduled_key, log_existing, keywords, blocklist
+from db import subscription, existing, scheduled_key, log_existing, keywords, blocklist, mutual_add_existing
 import threading
 import weibo_2_album
 from command import setupCommand, core_channels_ids
 from common import debug_group, tele, logger
 import weiboo
 import random
-from filter import passFilter, shouldProcessResult
+from filter import passFilter, shouldProcessResult, shouldSendMutalHelp
 import time
 
 auto_collect_channel_id = -1001598520359
@@ -23,7 +23,7 @@ def shouldProcess(channel, card, key):
 		return False
 	return True
 
-def getResult(url, card, channels):
+def getResult(url, card):
 	result = weibo_2_album.get(url, card['mblog'])
 	if '全文</a>' not in str(card['mblog']):
 		return result
@@ -51,6 +51,19 @@ def tryExtendSubscription(key, channels, card):
 			return
 	subscription.sub[auto_collect_channel_id].append(str(user_id))
 	scheduled_key.append(str(user_id))
+
+@log_on_fail(debug_group)
+def send_mutual_help(url, card):
+	if not shouldSendMutalHelp(card):
+		return
+	whash = ''.join(weibo_2_album.getCap(card['mblog'])[:20].split())
+	if not mutual_add_existing.add(whash):
+		return
+	result = getResult(url, card)
+	if shouldProcessMutualHelpResult
+
+
+
 
 @log_on_fail(debug_group)
 def log(url, card, key, channels, sent):
@@ -103,7 +116,7 @@ def process(key, method=weiboo.search):
 				continue
 			try:
 				if not result:
-					result = getResult(url, card, channels)
+					result = getResult(url, card)
 				if not shouldProcessResult(channel, result):
 					continue
 				album_sender.send_v2(channel, result)
@@ -111,6 +124,7 @@ def process(key, method=weiboo.search):
 			except Exception as e:
 				debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
 		log(url, card, key, channels, sent_channels)
+		send_mutual_help(url, card)
 
 @log_on_fail(debug_group)
 def loopImp():

@@ -7,6 +7,7 @@ existing = plain_db.loadKeyOnlyDB('existing')
 blocklist = plain_db.loadKeyOnlyDB('blocklist')
 popularlist = plain_db.loadKeyOnlyDB('popularlist')
 log_existing = plain_db.loadKeyOnlyDB('log_existing')
+mutual_add_existing = plain_db.loadKeyOnlyDB('mutual_add_existing')
 keywords = plain_db.loadKeyOnlyDB('keywords')
 weibo_name = plain_db.load('weibo_name', isIntValue=False)
 scheduled_key = []
