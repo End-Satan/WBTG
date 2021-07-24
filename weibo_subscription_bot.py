@@ -54,7 +54,7 @@ def tryExtendSubscription(key, channels, card):
 	scheduled_key.append(str(user_id))
 
 @log_on_fail(debug_group)
-def send_mutual_help(url, card):
+def send_mutual_help(url, card, sent_channels):
 	if not shouldSendMutalHelp(card):
 		return
 	whash = ''.join(weibo_2_album.getCap(card['mblog'])[:20].split())
@@ -98,6 +98,17 @@ def log(url, card, key, channels, sent):
 		print('log failed', str(e), message)
 	time.sleep(5)	
 
+def trySend(channel, url, card, sent_channels, result):
+	try:
+		if not result:
+			result = getResult(url, card)
+		if not shouldProcessResult(channel, result):
+			continue
+		album_sender.send_v2(channel, result)
+		sent_channels.append(channel)
+	except Exception as e:
+		debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
+
 def process(key, method=weiboo.search):
 	channels = subscription.channels(tele.bot, key)
 	try:
@@ -114,15 +125,7 @@ def process(key, method=weiboo.search):
 		for channel in channels:
 			if not shouldProcess(channel, card, key):
 				continue
-			try:
-				if not result:
-					result = getResult(url, card)
-				if not shouldProcessResult(channel, result):
-					continue
-				album_sender.send_v2(channel, result)
-				sent_channels.append(channel)
-			except Exception as e:
-				debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
+			trySend(channel, url, card, sent_channels, result)
 		log(url, card, key, channels, sent_channels)
 		send_mutual_help(url, card)
 

@@ -3,7 +3,7 @@ from telegram_util import log_on_fail, splitCommand, tryDelete, autoDestroy
 from common import debug_group
 from db import subscription, blocklist, popularlist, scheduled_key
 
-core_channels_ids = set([-1001496977825, -1001374366482, -1001340272388, -1001326932731, -1001598520359])
+core_channels_ids = set([-1001496977825, -1001374366482, -1001340272388, -1001326932731, -1001598520359, -1001570955777, -1001553483809])
 
 @log_on_fail(debug_group)
 def handleAdmin(msg):
