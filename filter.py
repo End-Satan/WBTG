@@ -30,7 +30,7 @@ def passBasicFilter(result):
 def shouldProcessResult(channel, result):
 	if subscription.hasVideoOnlyFiler(channel.id):
 		return result.video
-	if not subscription.hasMasterFilter(channel.id):
+	if not subscription.hasBasicFilter(channel.id):
 		return True
 	return passBasicFilter(result)
 

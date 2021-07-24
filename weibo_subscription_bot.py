@@ -53,17 +53,25 @@ def tryExtendSubscription(key, channels, card):
 	subscription.sub[auto_collect_channel_id].append(str(user_id))
 	scheduled_key.append(str(user_id))
 
+def trySend(channel, url, card, sent_channels, result):
+	try:
+		if not result:
+			result.append(getResult(url, card))
+		if not shouldProcessResult(channel, result[0]):
+			return
+		album_sender.send_v2(channel, result[0])
+		sent_channels.append(channel)
+	except Exception as e:
+		debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
+
 @log_on_fail(debug_group)
-def send_mutual_help(url, card, sent_channels):
+def sendMutualhelp(url, card, sent_channels, result):
 	if not shouldSendMutalHelp(card):
 		return
 	whash = ''.join(weibo_2_album.getCap(card['mblog'])[:20].split())
 	if not mutual_add_existing.add(whash):
 		return
-	result = getResult(url, card)
-	if not passBasicFilter(result):
-		return
-	album_sender.send_v2(mutual_help_channel, result)
+	trySend(mutual_help_channel, url, card, sent_channels, result)
 
 @log_on_fail(debug_group)
 def log(url, card, key, channels, sent):
@@ -98,17 +106,6 @@ def log(url, card, key, channels, sent):
 		print('log failed', str(e), message)
 	time.sleep(5)	
 
-def trySend(channel, url, card, sent_channels, result):
-	try:
-		if not result:
-			result = getResult(url, card)
-		if not shouldProcessResult(channel, result):
-			continue
-		album_sender.send_v2(channel, result)
-		sent_channels.append(channel)
-	except Exception as e:
-		debug_group.send_message(getLogStr(channel.username, channel.id, url, e))
-
 def process(key, method=weiboo.search):
 	channels = subscription.channels(tele.bot, key)
 	try:
@@ -120,14 +117,14 @@ def process(key, method=weiboo.search):
 		print('no search result', key)
 		return
 	for url, card in search_result:
-		result = None
+		result = []
 		sent_channels = []
 		for channel in channels:
 			if not shouldProcess(channel, card, key):
 				continue
 			trySend(channel, url, card, sent_channels, result)
+		sendMutualhelp(url, card, sent_channels, result)
 		log(url, card, key, channels, sent_channels)
-		send_mutual_help(url, card)
 
 @log_on_fail(debug_group)
 def loopImp():
