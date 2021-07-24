@@ -10,10 +10,11 @@ from command import setupCommand, core_channels_ids
 from common import debug_group, tele, logger
 import weiboo
 import random
-from filter import passFilter, shouldProcessResult, shouldSendMutalHelp
+from filter import passFilter, shouldProcessResult, shouldSendMutalHelp, passBasicFilter
 import time
 
 auto_collect_channel_id = -1001598520359
+mutual_help_channel = bot.get_chat(-1001570955777)
 
 def shouldProcess(channel, card, key):
 	if not passFilter(channel, card, key):
@@ -60,10 +61,9 @@ def send_mutual_help(url, card):
 	if not mutual_add_existing.add(whash):
 		return
 	result = getResult(url, card)
-	if shouldProcessMutualHelpResult
-
-
-
+	if not passBasicFilter(result):
+		return
+	album_sender.send_v2(mutual_help_channel, result)
 
 @log_on_fail(debug_group)
 def log(url, card, key, channels, sent):

@@ -22,14 +22,17 @@ def passMasterFilter(card):
 			return False
 	return True
 
+def passBasicFilter(result):
+	if result.imgs or result.video:
+		return True
+	return len(result.cap_html_v2) > 20
+
 def shouldProcessResult(channel, result):
 	if subscription.hasVideoOnlyFiler(channel.id):
 		return result.video
 	if not subscription.hasMasterFilter(channel.id):
 		return True
-	if result.imgs or result.video:
-		return True
-	return len(result.cap_html_v2) > 20
+	return passBasicFilter(result)
 
 # def tooOld(card):
 # 	created_at = card['mblog']['created_at']
