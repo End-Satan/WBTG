@@ -29,7 +29,7 @@ def shouldSendMutalHelp(card):
 	if matchKey(str(card), blocklist.items()):
 		return False
 	# TODO: save keyword in a list, and support command add
-	if matchKey(str(card), ['一点她能量', '#今日互帮互助']):
+	if matchKey(str(card), ['一点她能量', '#今日互帮互助', '5407488157']):
 		return False
 	if matchKey(str(card), MUTUAL_HELP_KEYS):
 		return True
