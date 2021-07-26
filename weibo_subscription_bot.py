@@ -86,7 +86,6 @@ def log(url, card, key, channels, sent):
 	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
 	if additional_info:
 		additional_info += ' '
-	disable_web_page_preview = not matchKey(additional_info, ['imgs:', 'video:'])
 	if set([channel.id for channel in channels]) & core_channels_ids:
 		mark = ''
 	else:
@@ -103,9 +102,9 @@ def log(url, card, key, channels, sent):
 		key, ' '.join([str(channel.id) for channel in channels]), 
 		getChannelsLog(channels), sent, mark, url, url)
 	try:
-		logger.send_message(message, parse_mode='html', disable_web_page_preview=disable_web_page_preview)
+		logger.send_message(message, parse_mode='html', disable_web_page_preview=True)
 	except Exception as e:
-		print('log failed', str(e), message)
+		logger.send_message(message, disable_web_page_preview=True)
 	time.sleep(5)	
 
 def process(key, method=weiboo.search):
