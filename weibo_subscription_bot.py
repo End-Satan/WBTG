@@ -3,7 +3,7 @@
 
 from telegram_util import log_on_fail, removeOldFiles, getLogStr, isInt, getChannelsLog, matchKey
 import album_sender
-from db import subscription, existing, scheduled_key, log_existing, keywords, blocklist, mutual_add_existing
+from db import subscription, existing, scheduled_key, log_existing, keywords, blocklist, mutual_add_existing, popularlist
 import threading
 import weibo_2_album
 from command import setupCommand, core_channels_ids
@@ -39,7 +39,9 @@ def tryExtendSubscription(key, channels, card):
 	core_card = card.get('mblog', {}).get('retweeted_status')
 	if not core_card:
 		return
-	if matchKey(str(card), [str(item) for item in blocklist.items()]):
+	if matchKey(str(card), blocklist.items()):
+		return
+	if matchKey(str(card), popularlist.items()):
 		return
 	if not (set([channel.id for channel in channels]) & 
 		(core_channels_ids - set([auto_collect_channel_id]))):
