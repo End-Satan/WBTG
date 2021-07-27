@@ -16,7 +16,7 @@ def handleAdmin(msg):
 	if command == '/abl' and len(text) > 1:
 		blocklist.add(text)
 		success = True
-	if command == '/apl':
+	if command == '/apl' and len(text) > 1:
 		popularlist.add(text)
 		success = True
 	if success:
