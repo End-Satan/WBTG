@@ -26,6 +26,8 @@ def passMasterFilter(card):
 MUTUAL_HELP_KEYS = ['互助', '求助', '帮帮', '救援', '求救']
 
 def shouldSendMutalHelp(card):
+	if weiboo.getCount(card) < 10:
+		return False
 	if matchKey(str(card), blocklist.items()):
 		return False
 	if matchKey(str(card), popularlist.items()):
@@ -37,7 +39,7 @@ def shouldSendMutalHelp(card):
 def passBasicFilter(result):
 	if result.imgs or result.video:
 		return True
-	return len(result.cap_html_v2) > 20
+	return len(result.cap_html_v2) > 40
 
 def shouldProcessResult(channel, result):
 	if subscription.hasVideoOnlyFiler(channel.id):
