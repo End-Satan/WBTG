@@ -93,11 +93,11 @@ def log(url, card, key, channels, sent):
 	mark = ''
 	if key in ['LGBT', '男权']:
 		mark += ' weibo_string_key_ignore'
-	message = '%s\n\n%skey: %s channel_id: %s %s%s%s %s <a href="%s">source</a>' % (
+	message = '%s\n\n%skey: %s channel_id: %s %s%s %s <a href="%s">source</a>' % (
 		weibo_2_album.getCap(card['mblog']),
 		additional_info,
 		key, ' '.join([str(channel.id) for channel in channels]), 
-		getChannelsLog(channels), sent, mark, url, url)
+		getChannelsLog(channels), mark, url, url)
 	try:
 		logger.send_message(message, parse_mode='html', disable_web_page_preview=True)
 	except Exception as e:
