@@ -79,6 +79,10 @@ def sendMutualhelp(url, card, sent_channels, result):
 def log(url, card, key, channels, sent):
 	if weiboo.getCount(card) < 40:
 		return
+	if not set([channel.id for channel in channels]) & core_channels_ids: # not related channel
+		return
+	if set([channel.id for channel in sent]) & core_channels_ids: # sent
+		return
 	whash = weiboo.getHash(card)
 	if not log_existing.add(whash):
 		return
@@ -86,15 +90,8 @@ def log(url, card, key, channels, sent):
 	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
 	if additional_info:
 		additional_info += ' '
-	if set([channel.id for channel in channels]) & core_channels_ids:
-		mark = ''
-	else:
-		mark = ' weibo_channel_ignore'
-	if set([channel.id for channel in sent]) & core_channels_ids:
-		sent = ' weibo_bot_sent' # means sent to core channel
-	else:
-		sent = ''
-	if not isInt(key):
+	mark = ''
+	if key in ['LGBT', '男权']:
 		mark += ' weibo_string_key_ignore'
 	message = '%s\n\n%skey: %s channel_id: %s %s%s%s %s <a href="%s">source</a>' % (
 		weibo_2_album.getCap(card['mblog']),
