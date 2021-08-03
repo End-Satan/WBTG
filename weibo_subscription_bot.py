@@ -81,8 +81,6 @@ def log(url, card, key, channels, sent):
 		return
 	if not set([channel.id for channel in channels]) & core_channels_ids: # not related channel
 		return
-	if set([channel.id for channel in sent]) & core_channels_ids: # sent
-		return
 	whash = weiboo.getHash(card)
 	if not log_existing.add(whash):
 		return
@@ -90,14 +88,18 @@ def log(url, card, key, channels, sent):
 	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
 	if additional_info:
 		additional_info += ' '
+	if set([channel.id for channel in sent]) & core_channels_ids: # sent
+		sent = ' weibo_bot_sent'
+	else:
+		sent = ''
 	mark = ''
 	if key in ['LGBT', '男权']:
 		mark += ' weibo_string_key_ignore'
-	message = '%s\n\n%skey: %s channel_id: %s %s%s %s <a href="%s">source</a>' % (
+	message = '%s\n\n%skey: %s channel_id: %s %s%s%s %s <a href="%s">source</a>' % (
 		weibo_2_album.getCap(card['mblog']),
 		additional_info,
 		key, ' '.join([str(channel.id) for channel in channels]), 
-		getChannelsLog(channels), mark, url, url)
+		getChannelsLog(channels), sent, mark, url, url)
 	try:
 		logger.send_message(message, parse_mode='html', disable_web_page_preview=True)
 	except Exception as e:
