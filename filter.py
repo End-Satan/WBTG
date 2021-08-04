@@ -8,14 +8,15 @@ def shouldApplyFilter(channel_id, key):
 	return subscription.filterOnKey(channel_id)
 
 def passKeyFilter(card):
-	# if matchKey(str(card), ['5807402211', '1357494880']): # testing
-	# 	return True
+	if matchKey(str(card), ['5776930791']):
+		return True
 	if matchKey(str(card), popularlist.items()):
 		return weiboo.getCount(card) > 10000
 	return weiboo.getCount(card) > 1000
 
 def passMasterFilter(card):
-	if weiboo.getCount(card) < 300:
+	if ((not matchKey(str(card), ['5776930791'])) and 
+		weiboo.getCount(card) < 300):
 		return False
 	# TODO: change this to matchKey
 	for item in blocklist.items():
