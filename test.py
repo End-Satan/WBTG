@@ -1,4 +1,5 @@
 from db import subscription
+from command import core_channels_ids
 
 def oneTimeCleanSubscriber():
 	for chat_id in list(subscription.sub.keys()):
@@ -18,7 +19,14 @@ def removeNoResult():
 	for item, count in items.items():
 		if count < 3:
 			continue
-		print(item)
-
+		for chat_id in subscription.sub:
+			if chat_id in core_channels_ids:
+				continue
+			if sum(['ilter' in key for key in subscription.sub.get(chat_id, [])]):
+				continue
+			if item in subscription.sub.get(chat_id, []):
+				subscription.sub[chat_id].remove(item)
+	subscription.save()
+				
 if __name__ == '__main__':
 	removeNoResult()
