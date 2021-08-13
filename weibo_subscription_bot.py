@@ -77,7 +77,7 @@ def sendMutualhelp(url, card, sent_channels, result):
 
 @log_on_fail(debug_group)
 def log(url, card, key, channels, sent):
-	if weiboo.getCount(card) < 40:
+	if weiboo.getCount(card) < 200: 
 		return
 	if not set([channel.id for channel in channels]) & core_channels_ids: # not related channel
 		return
