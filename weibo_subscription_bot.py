@@ -81,11 +81,16 @@ def log(url, card, key, channels, sent):
 		return
 	if not set([channel.id for channel in channels]) & core_channels_ids: # not related channel
 		return
+	if not set([channel.id for channel in channels]) & set([-1001374366482, -1001340272388]):
+		if weiboo.getCount(card) < 500: 
+			return
 	whash = weiboo.getHash(card)
 	if not log_existing.add(whash):
 		return
 	tryExtendSubscription(key, channels, card)
 	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
+	if not matchKey(additional_info, ['.jpg', '.mp4', 'imgs']):
+		
 	if additional_info:
 		additional_info += ' '
 	if set([channel.id for channel in sent]) & core_channels_ids: # sent
