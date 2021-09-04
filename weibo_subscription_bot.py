@@ -77,34 +77,29 @@ def sendMutualhelp(url, card, sent_channels, result):
 
 @log_on_fail(debug_group)
 def log(url, card, key, channels, sent):
-	if weiboo.getCount(card) < 200: 
-		return
+	count_threshold = 200
 	if not set([channel.id for channel in channels]) & core_channels_ids: # not related channel
 		return
 	if not set([channel.id for channel in channels]) & set([-1001374366482, -1001340272388]):
-		if weiboo.getCount(card) < 500: 
-			return
+		count_threshold *= 3
+	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
+	if not matchKey(additional_info, ['.jpg', '.mp4', 'imgs']):
+		count_threshold *= 5
+	if weiboo.getCount(card) < count_threshold: 
+		return
 	whash = weiboo.getHash(card)
 	if not log_existing.add(whash):
 		return
 	tryExtendSubscription(key, channels, card)
-	additional_info = weibo_2_album.getAdditionalInfo(card['mblog'])
-	if not matchKey(additional_info, ['.jpg', '.mp4', 'imgs']):
-		
-	if additional_info:
-		additional_info += ' '
 	if set([channel.id for channel in sent]) & core_channels_ids: # sent
 		sent = ' weibo_bot_sent'
 	else:
 		sent = ''
-	mark = ''
-	if key in ['LGBT', '男权']:
-		mark += ' weibo_string_key_ignore'
-	message = '%s\n\n%skey: %s channel_id: %s %s%s%s %s <a href="%s">source</a>' % (
+	message = '%s\n\n%s key: %s channel_id: %s %s%s %s <a href="%s">source</a>' % (
 		weibo_2_album.getCap(card['mblog']),
 		additional_info,
 		key, ' '.join([str(channel.id) for channel in channels]), 
-		getChannelsLog(channels), sent, mark, url, url)
+		getChannelsLog(channels), sent, url, url)
 	try:
 		logger.send_message(message, parse_mode='html', disable_web_page_preview=True)
 	except Exception as e:
