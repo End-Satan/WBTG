@@ -19,6 +19,8 @@ def removeNoResult():
 	for item, count in items.items():
 		if count < 3:
 			continue
+		item = item.split()[-1]
+		print('removing', item)
 		for chat_id in subscription.sub:
 			if chat_id in core_channels_ids:
 				continue
