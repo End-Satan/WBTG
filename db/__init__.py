@@ -122,6 +122,9 @@ class Subscription(object):
 
 	def hasVideoOnlyFiler(self, chat_id):
 		return 'videoOnlyFilter' in self.sub.get(chat_id, [])
+
+	def hasBasicKeyFilter(self, chat_id):
+		return 'basicKeyFilter' in self.sub.get(chat_id, [])
 		
 	def save(self):
 		with open('db/subscription', 'w') as f:

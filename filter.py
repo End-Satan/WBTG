@@ -52,6 +52,13 @@ def shouldProcessResult(channel, result):
 		return True
 	return passBasicFilter(result)
 
+def passBasicKeyFilter(card):
+	if matchKey(str(card), blocklist.items()):
+		return False
+	if matchKey(str(card), popularlist.items()):
+		return False
+	return True
+
 # def tooOld(card):
 # 	created_at = card['mblog']['created_at']
 # 	if len(created_at) != 5:
@@ -68,4 +75,6 @@ def passFilter(channel, card, key):
 	if (subscription.hasMasterFilter(channel_id) and 
 		not passMasterFilter(card)):
 		return False
+	if not isInt(key) and subscription.hasBasicKeyFilter(channel_id):
+		return passBasicKeyFilter(card)
 	return True
