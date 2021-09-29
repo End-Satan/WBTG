@@ -123,7 +123,7 @@ def process(key, method=weiboo.search):
 			if not shouldProcess(channel, card, key):
 				continue
 			trySend(channel, url, card, sent_channels, result)
-		sendMutualhelp(url, card, sent_channels, result)
+		# sendMutualhelp(url, card, sent_channels, result)
 		log(url, card, key, channels, sent_channels)
 
 @log_on_fail(debug_group)
