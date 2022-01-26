@@ -114,7 +114,7 @@ def process(key, method=weiboo.search):
 		print('search failed', key, str(e))
 		return
 	if not search_result:
-		print('no search result', key)
+		# print('no search result', key)
 		return
 	for url, card in search_result:
 		result = []
