@@ -23,6 +23,7 @@
 -1001567128469:
 - '5648729445'
 - A岛-匿名版
+- strictFilter
 -1001553483809:
 - noSendFilter
 - Logiquedelasensation
@@ -339,6 +340,7 @@
 - '1955181241'
 - '2789616391'
 - '5120978555'
+- strictFilter
 -1001340272388:
 - hasMasterFilter
 - filterOnUser
