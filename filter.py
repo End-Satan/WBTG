@@ -77,4 +77,6 @@ def passFilter(channel, card, key):
 		return False
 	if not isInt(key) and subscription.hasBasicKeyFilter(channel_id):
 		return passBasicKeyFilter(card)
+	if subscription.hasStictFitler(channel_id):
+		return passBasicKeyFilter(card)
 	return True

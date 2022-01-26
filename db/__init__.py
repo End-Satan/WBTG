@@ -125,6 +125,9 @@ class Subscription(object):
 
 	def hasBasicKeyFilter(self, chat_id):
 		return 'basicKeyFilter' in self.sub.get(chat_id, [])
+
+	def hasStictFitler(self, chat_id):
+		return 'strictFilter' in self.sub.get(chat_id, [])
 		
 	def save(self):
 		with open('db/subscription', 'w') as f:
